@@ -1,0 +1,69 @@
+{
+    "contacts": [
+        {
+            "userId": "uid202301",
+            "name": "user01",
+            "Avatar": "aabb.jpg"
+        },
+        {
+            "userId": "uid202302",
+            "name": "user02",
+            "Avatar": "aabb.jpg"
+        },
+        {
+            "userId": "uid202303",
+            "name": "user03",
+            "Avatar": "aabb.jpg"
+        },
+        {
+            "userId": "uid202304",
+            "name": "user04",
+            "Avatar": "aabb.jpg"
+        },
+        {
+            "userId": "uid202305",
+            "name": "user05",
+            "Avatar": "aabb.jpg"
+        },
+        {
+            "userId": "uid202306",
+            "name": "user06",
+            "Avatar": "aabb.jpg"
+        },
+        {
+            "userId": "uid202304",
+            "name": "user04",
+            "Avatar": "aabb.jpg"
+        },
+        {
+            "userId": "uid202305",
+            "name": "user05",
+            "Avatar": "aabb.jpg"
+        },
+        {
+            "userId": "uid202306",
+            "name": "user06",
+            "Avatar": "aabb.jpg"
+        },
+        {
+            "userId": "uid202304",
+            "name": "user04",
+            "Avatar": "aabb.jpg"
+        },
+        {
+            "userId": "uid202305",
+            "name": "user05",
+            "Avatar": "aabb.jpg"
+        },
+        {
+            "userId": "uid202306",
+            "name": "user06",
+            "Avatar": "aabb.jpg"
+        },
+        {
+            "userId": "uid202307",
+            "name": "user07",
+            "Avatar": "aabb.jpg"
+        }
+    ]
+}
