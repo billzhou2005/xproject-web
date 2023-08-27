@@ -19,11 +19,11 @@ function checkRouter(path) {
   }
 router.beforeEach((to, from, next) => {
 //store.commit('getToken')
-console.log("localStorage.user:", localStorage.user)
+// console.log("localStorage.user:", localStorage.user)
 const isLogin = localStorage.user ? true : false;
-console.log("router.beforeEach isLogin:", isLogin)
-console.log("from.name:", from.name)
-console.log("to.name:", to.name)
+// console.log("router.beforeEach isLogin:", isLogin)
+// console.log("from.name:", from.name)
+// console.log("to.name:", to.name)
 if (!isLogin) {
     if (to.name === 'guest' || to.name === 'registration') {
         next()

@@ -10,7 +10,7 @@ const userStore = useUserStore()
 const { user, isLogin } = storeToRefs(userStore)
 
 const apiStore = useAxiosApiStore()
-const { msg, response } = storeToRefs(apiStore)
+const { msg, friends } = storeToRefs(apiStore)
 
 const params = ref({});
 params.value = {
@@ -27,14 +27,8 @@ params.value = {
   userId: "string",
 };
 
-const addr = "user/seekFriends"
-
-const data = ref({});
 
 const axiosCallTest = () => {
-  console.log("token",user.value.token)
-  console.log("addr",addr)
-  console.log("params.value",params.value)
   apiStore.dispatch('seekFriends', params.value)
 }
 
@@ -60,7 +54,7 @@ onMounted(() => {
       axiosCall test
     </button>
     <p>response: {{ msg }}</p>
-    <p>{{ response }}</p>
+    <p>{{ friends }}</p>
   </div>
 </template>
 

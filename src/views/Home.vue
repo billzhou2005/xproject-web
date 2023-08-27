@@ -3,10 +3,12 @@ import { computed, onBeforeMount, onMounted, ref } from "vue";
 import Friends from "../components/Friends.vue";
 import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia';
-import axiosClient from "@/stores/axiosClient"
+import { useAxiosApiStore } from '@/stores/axiosApi'
 
 const userStore = useUserStore()
-const { user, isLogin,friends } = storeToRefs(userStore)
+const { user, isLogin } = storeToRefs(userStore)
+const apiStore = useAxiosApiStore()
+const { friends } = storeToRefs(apiStore)
 
 const params = ref({});
 params.value = {
@@ -24,18 +26,7 @@ params.value = {
 };
 
 onMounted(() => {
-  console.log("user:",isLogin, user)
-  userStore.getFriends(params.value)
-  // axiosClient
-  //     .post("user/seekFriends", params.value, {
-  //       headers: {
-  //         "x-token":localStorage.getItem("token")
-  //       },
-  //     })
-  //     .then(({ data }) => {
-  //       console.log("getFriends",data.data);
-  //       friends.value = data.data.fdss ;
-  //     });
+  apiStore.dispatch('seekFriends', params.value)
 })
 
 </script>

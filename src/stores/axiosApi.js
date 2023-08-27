@@ -14,16 +14,17 @@ export const useAxiosApiStore = defineStore('axios-api', () => {
       baseURL: import.meta.env.VITE_API_BASE_URL,
     });
     const response = ref({})
+    const friends = ref([])
     const msg = ref('success')
+
+
     let addr = 'none'
     const dispatch = (name, params) => {
       apiAddrs.value.forEach(element => {
-        console.log("element",element)
         if (element.name === name) {
           addr = element.addr
         }
       });
-      console.log("addr:",addr)
       axiosClient
       .post(addr, params, {
         headers: {
@@ -32,8 +33,18 @@ export const useAxiosApiStore = defineStore('axios-api', () => {
       })
       .then(({ data }) => {
         console.log("axiosApiStore data:",data);
-        response.value = data.data;
+        if (data.msg !== 'success') {
+          return
+        }
+
         msg.value = data.msg
+        switch (name) {
+          case 'seekFriends':
+            friends.value = data.data.fdss
+          break;
+          default:
+            response.value = data.data;
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -42,6 +53,7 @@ export const useAxiosApiStore = defineStore('axios-api', () => {
     return { 
       msg,
       response,
+      friends,
       dispatch,
      };
 })
