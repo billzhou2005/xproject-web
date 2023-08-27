@@ -35,8 +35,7 @@ const axiosCallTest = () => {
   console.log("token",user.value.token)
   console.log("addr",addr)
   console.log("params.value",params.value)
-  data.value = apiStore.dispatch(user.value.token, addr, params.value)
-  console.log("data:",data.value)
+  apiStore.dispatch('seekFriends', params.value)
 }
 
 onMounted(() => {

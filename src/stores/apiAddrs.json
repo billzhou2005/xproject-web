@@ -1,0 +1,20 @@
+{
+    "data":[
+        {
+            "name": "login",
+            "addr": "user/loginByEmail"
+        },
+        {
+            "name": "logout",
+            "addr": ""
+        },
+        {
+            "name": "personalInfo",
+            "addr": "user/personalInfo"
+        },
+        {
+            "name": "seekFriends",
+            "addr": "user/seekFriends"
+        }
+    ]
+}
