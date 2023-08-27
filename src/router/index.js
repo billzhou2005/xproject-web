@@ -8,7 +8,7 @@ import MealsByIngredient from '../views/MealsByIngredient.vue'
 import MealsByLetter from '../views/MealsByLetter.vue'
 import MealsByName from '../views/MealsByName.vue'
 import MealDetails from '../views/MealDetails.vue'
-import Ingredients from '../views/Ingredients.vue'
+import Personal from '../views/personal.vue'
 import Chats from '../views/Chats.vue'
 
 const routes = [
@@ -36,9 +36,9 @@ const routes = [
         component: MealsByLetter,
       },
       {
-        path: "/ingredients",
-        name: "ingredients",
-        component: Ingredients,
+        path: "/personal",
+        name: "personal",
+        component: Personal,
       },
       {
         path: "/by-ingredient/:ingredient",

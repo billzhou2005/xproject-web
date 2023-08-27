@@ -1,7 +1,8 @@
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, onMounted,onBeforeMount, watch } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia';
+import axiosClient from "@/stores/axiosClient"
 
 import { useRouter } from 'vue-router'
 const router = useRouter()
@@ -9,11 +10,12 @@ const router = useRouter()
 const userStore = useUserStore()
 const { user, isLogin } = storeToRefs(userStore)
 
-
 const email = ref(null)
 const password = ref(null)
 const isAgree = ref(false)
 const handleSubmit = () => {
+  localStorage.removeItem("token");
+
   console.log("email:",email.value)
   console.log("password:",password.value)
   console.log("isAgree:",isAgree.value)
@@ -26,8 +28,22 @@ const handleSubmit = () => {
     email: email.value,
     password: password.value,
   }
-  userStore.login(keyword.value)
+  //userStore.login(keyword.value)
+  axiosClient.post("user/loginByEmail", keyword.value).then(rsp => {
+    console.log("data:",rsp.data)
+    if (rsp.data.msg === "success") {
+      user.value = rsp.data.data
+      isLogin.value = true
+      console.log("user:",user)
+      setTimeout(() => {
+        console.log("Delayed for 1 second.");
+        router.push("/");
+      }, "300");
+    }
+  })
 }
+
+
 
 const params = ref({});
 params.value = {
@@ -43,13 +59,18 @@ params.value = {
   province: "",
   userId: "string",
 };
-const handleToHome = () => {
-  if (isLogin) {
-    userStore.getFriends(params)
-    router.push("/");
-  }
-}
-watch(user,handleToHome)
+// const handleToHome = () => {
+//   if (isLogin) {
+//     userStore.getFriends(params)
+//     router.push("/");
+//   }
+// }
+// watch(user,handleToHome)
+
+onMounted(() => {
+  localStorage.removeItem("token");
+  //localStorage.setItem("token", "");
+})
 
 </script>
 
@@ -77,7 +98,7 @@ watch(user,handleToHome)
                   <div class="flex items-center justify-end">
                      <a href="#" class="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">忘记密码?</a>
                   </div>
-                  <button @click="handleSubmit" type="submit" class="w-full bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" >进入</button>
+                  <button @click="handleSubmit" class="w-full bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded" >进入</button>
                   <router-link
                     :to="{ name: 'registration' }"
                     class="inline-flex items-center px-2 h-full transition-colors hover:bg-orange-500 hover:text-white"

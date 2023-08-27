@@ -6,7 +6,7 @@ import { storeToRefs } from 'pinia';
 import axiosClient from "@/stores/axiosClient"
 
 const userStore = useUserStore()
-const friends = ref([])
+const { user, isLogin,friends } = storeToRefs(userStore)
 
 const params = ref({});
 params.value = {
@@ -24,16 +24,18 @@ params.value = {
 };
 
 onMounted(() => {
-  axiosClient
-      .post("user/seekFriends", params.value, {
-        headers: {
-          "x-token":localStorage.getItem("token")
-        },
-      })
-      .then(({ data }) => {
-        console.log("getFriends",data.data);
-        friends.value = data.data.fdss ;
-      });
+  console.log("user:",isLogin, user)
+  userStore.getFriends(params.value)
+  // axiosClient
+  //     .post("user/seekFriends", params.value, {
+  //       headers: {
+  //         "x-token":localStorage.getItem("token")
+  //       },
+  //     })
+  //     .then(({ data }) => {
+  //       console.log("getFriends",data.data);
+  //       friends.value = data.data.fdss ;
+  //     });
 })
 
 </script>

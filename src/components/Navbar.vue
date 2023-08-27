@@ -11,7 +11,7 @@
         :to="{ name: 'chats' }"
         class="inline-flex items-center px-2 h-full transition-colors hover:bg-orange-500 hover:text-white"
       >
-        YOU聊
+        U聊
       </router-link>
       <router-link
         :to="{ name: 'byLetter' }"
@@ -20,7 +20,7 @@
         Game
       </router-link>
       <router-link
-        :to="{ name: 'ingredients' }"
+        :to="{ name: 'personal' }"
         class="inline-flex items-center px-2 h-full transition-colors hover:bg-orange-500 hover:text-white"
       >
         个人中心(web3)
