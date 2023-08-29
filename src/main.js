@@ -18,36 +18,16 @@ function checkRouter(path) {
     return hasCheck
   }
 router.beforeEach((to, from, next) => {
-//store.commit('getToken')
-let user= JSON.parse(localStorage.user)
-console.log("localStorage.user:", user)
-const isLogin = user.isLogin;
-console.log("router.beforeEach isLogin:", isLogin)
-console.log("from.name:", from.name)
-// console.log("to.name:", to.name)
-if (!isLogin) {
-    if (to.name === 'guest' || to.name === 'registration') {
-        next()
-        console.log("to.name:",to.name)
-        console.log("branch-1")
+    let user= JSON.parse(localStorage.user)
+    if (!user.isLogin) {
+        if (to.name === 'guest' || to.name === 'registration') {
+            next()
+        } else {
+            next({ name: 'guest' })
+        }
+    } else if (!checkRouter(to.path)) {
+        next({ name: 'home' })
     } else {
-        next({ name: 'guest' })
-        console.log("to.name:",to.name)
-        console.log("branch-2")
+        next()
     }
-} else if (!checkRouter(to.path)) {
-    next({ name: 'home' })
-    console.log("to.name:",to.name)
-    console.log("branch-3")
-} else {
-    next()
-}
-// console.log("to.name:", to.name)
-// if (!token && to.name !== 'guest') {
-//     next({ name: 'guest' })
-// } else if (!checkRouter(to.path)) {
-//     next({ name: 'home' })
-// } else {
-//     next()
-// }
 })
