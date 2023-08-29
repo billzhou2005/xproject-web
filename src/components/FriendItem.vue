@@ -7,7 +7,7 @@ defineProps({
     type: Object
   }
 })
-const imgUrl = "http://192.168.0.102:8885/uploads/";
+const imgUrl = "http://1.116.14.156:5186/uploads/";
 
 </script>
 

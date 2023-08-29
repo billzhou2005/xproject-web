@@ -2,10 +2,11 @@
 import { ref, computed, onMounted,onBeforeMount, watch } from 'vue'
 import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia';
-
-import axiosClient from "@/stores/axiosClient"
-
 import { useRouter } from 'vue-router'
+import { useAxiosApiStore } from '@/stores/axiosApi'
+
+const apiStore = useAxiosApiStore()
+
 const router = useRouter()
 
 const userStore = useUserStore()
@@ -15,8 +16,6 @@ const email = ref(null)
 const password = ref(null)
 const isAgree = ref(false)
 const handleSubmit = () => {
-  localStorage.removeItem("token");
-
   console.log("email:",email.value)
   console.log("password:",password.value)
   console.log("isAgree:",isAgree.value)
@@ -29,19 +28,24 @@ const handleSubmit = () => {
     email: email.value,
     password: password.value,
   }
+  console.log("login process.......")
+  apiStore.dispatch('login', keyword.value)
   //userStore.login(keyword.value)
-  axiosClient.post("user/loginByEmail", keyword.value).then(rsp => {
-    console.log("data:",rsp.data)
-    if (rsp.data.msg === "success") {
-      user.value = rsp.data.data
-      isLogin.value = true
-      console.log("user:",user)
-      setTimeout(() => {
-        console.log("Delayed for 1 second.");
-        router.push("/");
-      }, "300");
-    }
-  })
+  // axiosClient.post("user/loginByEmail", keyword.value).then(rsp => {
+  //   console.log("data:",rsp.data)
+  //   if (rsp.data.msg === "success") {
+  //     user.value = rsp.data.data
+  //     isLogin.value = true
+  //     console.log("user:",user)
+  //     localStorage.setItem("logging", false);
+
+  //     router.push("/");
+  //     // setTimeout(() => {
+  //     //   console.log("Delayed for 1 second.");
+  //     //   router.push("/");
+  //     // }, "300");
+  //   }
+  // })
 }
 
 
@@ -69,14 +73,17 @@ params.value = {
 // watch(user,handleToHome)
 
 onMounted(() => {
-  localStorage.removeItem("token");
-  //localStorage.setItem("token", "");
+
 })
 
 </script>
 
 <template>
 <section class="bg-gray-50 dark:bg-gray-900">
+  <div>debug
+    <p> user: {{ user }}</p>
+    <p> islogin: {{ isLogin }}</p>
+  </div>
   <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
       <a href="#" class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
           <img class="w-8 h-8 mr-2" src="/logo/icons8-logo-50.png" alt="logo">
@@ -87,7 +94,7 @@ onMounted(() => {
               <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                   登陆
               </h1>
-              <form class="space-y-4 md:space-y-6" action="#">
+              <div class="space-y-4 md:space-y-6" action="#">
                   <div>
                       <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">邮件地址</label>
                       <input v-model="email" type="email" name="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@company.com" required="">
@@ -106,7 +113,7 @@ onMounted(() => {
                   >
                   没有账号? 注册
                   </router-link>
-              </form>
+                </div>
           </div>
       </div>
   </div>

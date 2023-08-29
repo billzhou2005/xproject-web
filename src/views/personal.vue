@@ -47,7 +47,7 @@ onMounted(() => {
       Logout
     </button>
     <p>isLogin: {{ isLogin }}</p>
-    <p>{{ user.token }}</p>
+    <p>{{ user }}</p>
   </div>
   <div class="px-8">
     <button @click="axiosCallTest" class="btn btn-blue">

@@ -7,10 +7,11 @@ export const useUserStore = defineStore('user', () => {
   const router = useRouter()
   const user = ref(null)
     const isLogin = ref(false)
-    const friends = ref([])
     
     const logout = () => {
-      localStorage.removeItem('user')    
+      user.value = null  
+      isLogin.value =false
+      localStorage.removeItem('user')  
       router.push("/guest");
     }
 
@@ -30,28 +31,11 @@ export const useUserStore = defineStore('user', () => {
           console.log(err);
         });
     }
-    function getFriends(keyword) {
-      console.log("user",user.value)
-      axiosClient
-      .post("user/seekFriends", keyword, {
-        headers: {
-          "x-token":user.value.token
-        },
-      })
-      .then(({ data }) => {
-        console.log("getFriends",data.data);
-        //return data.data.fdss;
-        friends.value = data.data.fdss;
-      });
-  }
-
     return { 
         user,
         isLogin,
-        friends,
         login,
         logout,
-        getFriends,
     }
 },
 {

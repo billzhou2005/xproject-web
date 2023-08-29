@@ -4,12 +4,14 @@ import { defineStore, acceptHMRUpdate } from 'pinia'
 import { useUserStore } from './user'
 import { storeToRefs } from 'pinia';
 import ApiAddrs from './apiAddrs.json'
+import { useRouter } from 'vue-router'
 
 export const useAxiosApiStore = defineStore('axios-api', () => {
+    const router = useRouter()
     const apiAddrs = ref([])
     apiAddrs.value = ApiAddrs.data
     const userStore = useUserStore()
-    const { user } = storeToRefs(userStore)
+    const { user, isLogin } = storeToRefs(userStore)
     const axiosClient = axios.create({
       baseURL: import.meta.env.VITE_API_BASE_URL,
     });
@@ -20,6 +22,11 @@ export const useAxiosApiStore = defineStore('axios-api', () => {
 
     let addr = 'none'
     const dispatch = (name, params) => {
+      let token = ''
+      console.log("api dispatch",name)
+      if (name !== 'login') {
+        token = user.value.token
+      }
       apiAddrs.value.forEach(element => {
         if (element.name === name) {
           addr = element.addr
@@ -28,7 +35,7 @@ export const useAxiosApiStore = defineStore('axios-api', () => {
       axiosClient
       .post(addr, params, {
         headers: {
-          "x-token": user.value.token
+          "x-token": token
         },
       })
       .then(({ data }) => {
@@ -39,6 +46,12 @@ export const useAxiosApiStore = defineStore('axios-api', () => {
 
         msg.value = data.msg
         switch (name) {
+          case 'login':
+            user.value = data.data
+            isLogin.value = true
+            console.log("user:", user, "router push ...")
+            router.push("/");
+          break;
           case 'seekFriends':
             friends.value = data.data.fdss
           break;
