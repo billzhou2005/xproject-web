@@ -1,6 +1,10 @@
 {
     "data":[
         {
+            "name": "registerByEmail",
+            "addr": "user/registerByEmail"
+        },
+        {
             "name": "login",
             "addr": "user/loginByEmail"
         },

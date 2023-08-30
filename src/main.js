@@ -19,14 +19,14 @@ function checkRouter(path) {
   }
 router.beforeEach((to, from, next) => {
     let isLogin = false
-    console.log("localStorage.user:", localStorage.user)
+    //console.log("localStorage.user:", localStorage.user)
     if (localStorage.user !== undefined ) {
-        console.log("........")
+        //console.log("........")
         let user= JSON.parse(localStorage.user)
         isLogin = user.isLogin
-        console.log("isLogin:", isLogin)
+        //console.log("isLogin:", isLogin)
     }
-    console.log("to.path",to.path)
+    //console.log("to.path",to.path)
     if (!isLogin) {
         if (to.name === 'guest' || to.name === 'registration') {
             next()
@@ -34,13 +34,13 @@ router.beforeEach((to, from, next) => {
             next({ name: 'guest' })
         }
     } else if (!checkRouter(to.path)) {
-        console.log("branch-3")
+        //console.log("branch-3")
         next({ name: 'home' })
     } else {
         if (to.name === 'guest' || to.name === 'registration') {
             next({ name: 'home' })
         } else {
-            console.log("branch-4")
+            //console.log("branch-4")
             next()
         }
     }

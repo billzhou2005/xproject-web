@@ -1,18 +1,12 @@
 <script setup>
 import { ref, computed, watch } from 'vue'
-import axiosClient from "@/stores/axiosClient"
+import { useAxiosApiStore } from '@/stores/axiosApi'
 
-import { useUserStore } from '@/stores/user'
-import { storeToRefs } from 'pinia';
+const apiStore = useAxiosApiStore()
 
-import { useRouter } from 'vue-router'
-const router = useRouter()
-
-const response = ref({})
-const isRegistered = ref(false)
 
 const nickname = ref(null)
-const gender = ref("none")
+const gender = ref("未定")
 const email = ref(null)
 const password = ref(null)
 const repeatPassword = ref(null)
@@ -43,34 +37,12 @@ const handleSubmit = () => {
     agreement: isAgree.value
   }
   console.log(keyword)
-  axiosClient
-      .post("user/registerByEmail", keyword.value)
-      .then(({ data }) => {
-        console.log("register:",data);
-        response.value = data.msg
-        if (data.msg === "success") {
-            isRegistered.value = true
-            //router.push("/");
-          } else {
-            isRegistered.value = false
-          }
-      });
+  apiStore.dispatch('registerByEmail', keyword.value)
 }
-
-// const handleToHome = () => {
-//   if (isLogin) {
-//     router.push("/");
-//   }
-// }
-// watch(user,handleToHome)
 
 </script>
 
 <template>
-  <div>
-    <p>response: {{ response.value}}</p>
-    <p>{{ isRegistered }}</p>
-  </div>
 <section class="bg-gray-50 dark:bg-gray-900">
   <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
       <a href="#" class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
@@ -92,7 +64,7 @@ const handleSubmit = () => {
                     <select v-model="gender" id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                       <option value="男">男</option>
                       <option value="女">女</option>
-                      <option value="未定">未定</option>
+                      <option value="未定" selected> 未定 </option>
                     </select>
                   </div>
                   <div>

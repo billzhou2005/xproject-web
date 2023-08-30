@@ -16,6 +16,7 @@ export const useAxiosApiStore = defineStore('axios-api', () => {
       baseURL: import.meta.env.VITE_API_BASE_URL,
     });
     const response = ref({})
+    const personalInfo = ref({})
     const friends = ref([])
     const msg = ref('success')
 
@@ -23,8 +24,10 @@ export const useAxiosApiStore = defineStore('axios-api', () => {
     let addr = 'none'
     const dispatch = (name, params) => {
       let token = ''
-      console.log("api dispatch",name)
-      if (name !== 'login') {
+      console.log("api dispatch:",name)
+      if (name === 'login' || name === 'registerByEmail') {
+        token = ''
+      } else {
         token = user.value.token
       }
       apiAddrs.value.forEach(element => {
@@ -52,8 +55,15 @@ export const useAxiosApiStore = defineStore('axios-api', () => {
             console.log("user:", user, "router push ...")
             router.push("/");
           break;
+          case 'registerByEmail':
+            alert("注册成功，请登陆！")
+            router.push("/guest");
+          break;
           case 'seekFriends':
             friends.value = data.data.fdss
+          break;
+          case 'personalInfo':
+            personalInfo.value = data.data
           break;
           default:
             response.value = data.data;
@@ -66,6 +76,7 @@ export const useAxiosApiStore = defineStore('axios-api', () => {
     return { 
       msg,
       response,
+      personalInfo,
       friends,
       dispatch,
      };

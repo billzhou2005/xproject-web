@@ -23,7 +23,7 @@
         :to="{ name: 'personal' }"
         class="inline-flex items-center px-2 h-full transition-colors hover:bg-orange-500 hover:text-white"
       >
-        个人中心(web3)
+        个人信息
       </router-link>
     </div>
   </header>

@@ -7,8 +7,7 @@ defineProps({
     type: Object
   }
 })
-const imgUrl = "http://1.116.14.156:5186/uploads/";
-
+const imgUrl = import.meta.env.VITE_IMG_URL;
 </script>
 
 <template>

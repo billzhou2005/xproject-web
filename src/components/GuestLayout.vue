@@ -1,16 +1,8 @@
 <script setup>
 import { ref, computed, onMounted,onBeforeMount, watch } from 'vue'
-import { useUserStore } from '@/stores/user'
-import { storeToRefs } from 'pinia';
-import { useRouter } from 'vue-router'
 import { useAxiosApiStore } from '@/stores/axiosApi'
 
 const apiStore = useAxiosApiStore()
-
-const router = useRouter()
-
-const userStore = useUserStore()
-const { user, isLogin } = storeToRefs(userStore)
 
 const email = ref(null)
 const password = ref(null)
@@ -30,22 +22,6 @@ const handleSubmit = () => {
   }
   console.log("login process.......")
   apiStore.dispatch('login', keyword.value)
-  //userStore.login(keyword.value)
-  // axiosClient.post("user/loginByEmail", keyword.value).then(rsp => {
-  //   console.log("data:",rsp.data)
-  //   if (rsp.data.msg === "success") {
-  //     user.value = rsp.data.data
-  //     isLogin.value = true
-  //     console.log("user:",user)
-  //     localStorage.setItem("logging", false);
-
-  //     router.push("/");
-  //     // setTimeout(() => {
-  //     //   console.log("Delayed for 1 second.");
-  //     //   router.push("/");
-  //     // }, "300");
-  //   }
-  // })
 }
 
 
@@ -64,13 +40,6 @@ params.value = {
   province: "",
   userId: "string",
 };
-// const handleToHome = () => {
-//   if (isLogin) {
-//     userStore.getFriends(params)
-//     router.push("/");
-//   }
-// }
-// watch(user,handleToHome)
 
 onMounted(() => {
 
@@ -80,10 +49,6 @@ onMounted(() => {
 
 <template>
 <section class="bg-gray-50 dark:bg-gray-900">
-  <div>debug
-    <p> user: {{ user }}</p>
-    <p> islogin: {{ isLogin }}</p>
-  </div>
   <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
       <a href="#" class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
           <img class="w-8 h-8 mr-2" src="/logo/icons8-logo-50.png" alt="logo">
