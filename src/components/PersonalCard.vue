@@ -22,8 +22,8 @@ const imgUrl = import.meta.env.VITE_IMG_URL;
     <h3 >电子邮件地址：{{personalInfo.email}}</h3>
     <h3 >省份(或市)：{{personalInfo.province}}</h3>
     <h3 >市区（或县）：{{personalInfo.district}}</h3>
-    <h3 >身高：{{personalInfo.height}}</h3>
-    <h3 >体重：{{personalInfo.weight}}</h3>
+    <h3 >身高：{{personalInfo.height}} (cm)</h3>
+    <h3 >体重：{{personalInfo.weight}} (kg)</h3>
     <h3 >婚姻状况：{{personalInfo.maritalStatus}}</h3>
     <h3 >性格：{{personalInfo.character}}</h3>
     <h3 >教育程度：{{personalInfo.education}}</h3>
@@ -33,7 +33,7 @@ const imgUrl = import.meta.env.VITE_IMG_URL;
     <h3 >寻找关系：{{personalInfo.seekRelation}}</h3>
     <h3 >职业：{{personalInfo.occupation}}</h3>
     <h3 >职业状况：{{personalInfo.employmentStatus}}</h3>
-    <h3 >年收入：{{personalInfo.annualIncome}}</h3>
+    <h3 >年收入：{{personalInfo.annualIncome}} (万)</h3>
     <h3 >爱好：{{personalInfo.favoriteFun}}</h3>
     <h3 >喜爱的食物：{{personalInfo.favoriteFood}}</h3>
     <h3 >喜欢的运动：{{personalInfo.favoriteSport}}</h3>

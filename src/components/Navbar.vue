@@ -14,7 +14,7 @@
         U聊
       </router-link>
       <router-link
-        :to="{ name: 'byLetter' }"
+        :to="{ name: 'game' }"
         class="inline-flex items-center px-2 h-full transition-colors hover:bg-orange-500 hover:text-white"
       >
         Game

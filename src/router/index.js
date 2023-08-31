@@ -10,6 +10,7 @@ import MealsByName from '../views/MealsByName.vue'
 import MealDetails from '../views/MealDetails.vue'
 import Personal from '../views/Personal.vue'
 import Chats from '../views/Chats.vue'
+import Game from '../views/Game.vue'
 
 const routes = [
   {
@@ -25,7 +26,13 @@ const routes = [
         path: "/chats",
         name: "chats",
         component: Chats,
-      },      {
+      },      
+      {
+        path: "/game",
+        name: "game",
+        component: Game,
+      },      
+      {
         path: "/by-name/:name?",
         name: "byName",
         component: MealsByName,
