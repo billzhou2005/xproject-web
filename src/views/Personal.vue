@@ -1,15 +1,13 @@
 
 <script setup>
 import PersonalCard from "../components/PersonalCard.vue";
-import PersonalGallery from "../components/PersonalGallery.vue";
 import { computed } from "@vue/reactivity";
 import { onMounted, ref } from "vue";
-import { useUserStore } from '@/stores/user'
 import { useAxiosApiStore } from '@/stores/axiosApi'
 import { storeToRefs } from 'pinia';
+import { useUserStore } from '@/stores/user'
 
 const userStore = useUserStore()
-const { user, isLogin } = storeToRefs(userStore)
 
 const apiStore = useAxiosApiStore()
 const { personalInfo } = storeToRefs(apiStore)
@@ -24,16 +22,10 @@ onMounted(() => {
   <div class="p-8 pb-0 text-orange-500">
     <h1 class="text-4xl font-bold mb-4">个人信息</h1>
   </div>
-  <div class="p-8 pb-0">
-    <PersonalGallery :personalInfo = "personalInfo" />
-  </div>
-  <div class="p-8 pb-0">
+  <div class="mx-auto">
     <PersonalCard :personalInfo = "personalInfo" />
   </div>
   <div class="px-8 py-8">
-    <button @click="userStore.logout" class="w-32 mx-2 btn btn-blue">
-      编辑
-    </button>
     <button @click="userStore.logout" class="w-32 mx-2 btn-exit btn-exit-gray">
       退出登陆
     </button>

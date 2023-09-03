@@ -3,7 +3,6 @@ import { ref,computed,reactive, onMounted } from 'vue'
 import { useStompClientStore } from '@/stores/stompClient';
 import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia';
-
 defineProps({
   personalInfo: Object,
 })
@@ -25,22 +24,22 @@ const onImageClick = (i) =>{
   console.log("onImageClick",i);
 }
 const imageStart = reactive({ count: 0 })
-const leftArrow = reactive({ color: 'gray' })
-const rightArrow = reactive({ color: 'gray' })
+const leftArrow = reactive({ type: 'info-left' })
+const rightArrow = reactive({ type: 'info-right' })
 
 const handleLeft = () =>{
   if(imageStart.count > 0) {
     imageStart.count -=1
   } 
   if((images.value.length - imageStart.count) > 4) {
-    rightArrow.color = 'black'
+    rightArrow.type = 'primary-right'
   } else {
-    rightArrow.color = 'gray'
+    rightArrow.type = 'info-right'
   }
   if(imageStart.count > 0) {
-    leftArrow.color = 'black'
+    leftArrow.type = 'primary-left'
   } else {
-    leftArrow.color = 'gray'
+    leftArrow.type = 'info-left'
   } 
 }
 const handleRight = () =>{
@@ -48,24 +47,24 @@ const handleRight = () =>{
     return
   }
   if((images.value.length - imageStart.count) < 5) {
-    rightArrow.color = 'gray'
+    rightArrow.type = 'info-right'
     return
   }
   imageStart.count += 1
   if((images.value.length - imageStart.count) > 4) {
-    rightArrow.color = 'black'
+    rightArrow.type = 'primary-right'
   } else {
-    rightArrow.color = 'gray'
+    rightArrow.type = 'info-right'
   }
   if(imageStart.count > 0) {
-    leftArrow.color = 'black'
+    leftArrow.type = 'primary-left'
   } else {
-    leftArrow.color = 'gray'
+    leftArrow.type = 'info-left'
   } 
 }
 onMounted(() => {
   if(images.value.length > 4) {
-    rightArrow.color = 'black'
+    rightArrow.type = 'primary-right'
   }
 });
 </script>
@@ -80,12 +79,15 @@ onMounted(() => {
       >
     </div>
   </div>
-  <div class="grid grid-cols-2 gap-2">
-    <div>
-      <svg @click="handleLeft" transform="translate(500 0)" cursor="pointer" width="48" height="48" viewBox="0 0 512 512" aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg"><path :fill="leftArrow.color" d="M272,352l-0,94.201c-0,12.134 -7.309,23.073 -18.52,27.716c-11.21,4.644 -24.113,2.077 -32.693,-6.503c-45.522,-45.522 -143.645,-143.644 -183.13,-183.13c-15.621,-15.621 -15.621,-40.947 -0,-56.568l183.13,-183.13c8.58,-8.58 21.483,-11.147 32.693,-6.503c11.211,4.643 18.52,15.582 18.52,27.716l0,94.201l164.036,-0c7.417,-0 14.529,2.946 19.774,8.19c5.244,5.245 8.19,12.357 8.19,19.774c0,29.673 0,106.399 -0,136.072c0,7.417 -2.946,14.529 -8.19,19.774c-5.245,5.244 -12.357,8.19 -19.774,8.19l-164.036,-0Zm-223.029,-112.971c-9.373,9.373 -9.373,24.569 -0,33.942c39.485,39.485 137.607,137.607 183.13,183.13c4.003,4.003 10.025,5.201 15.257,3.034c5.231,-2.167 8.642,-7.272 8.642,-12.934c0,-42.564 0,-110.201 0,-110.201l180.036,0c3.173,0 6.216,-1.26 8.46,-3.504c2.244,-2.244 3.504,-5.287 3.504,-8.46l0,-136.072c0,-3.173 -1.26,-6.216 -3.504,-8.46c-2.244,-2.244 -5.287,-3.504 -8.46,-3.504l-180.036,0l0,-110.201c-0,-5.662 -3.411,-10.767 -8.642,-12.934c-5.232,-2.167 -11.254,-0.969 -15.257,3.034c-45.523,45.523 -143.645,143.645 -183.13,183.13Z"/></svg>
+  <div class="flex justify-center items-center py-2">
+    <div class="inline-flex">
+      <button @click="handleLeft" :class="leftArrow.type">
+        <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M15.293 3.293 6.586 12l8.707 8.707 1.414-1.414L9.414 12l7.293-7.293-1.414-1.414z"/></svg>
+      </button>
+      <button :class="rightArrow.type" @click="handleRight" >
+        <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M7.293 4.707 14.586 12l-7.293 7.293 1.414 1.414L17.414 12 8.707 3.293 7.293 4.707z"/></svg>
+      </button>
     </div>
-    <div>
-      <svg @click="handleRight" cursor="pointer" width="48" height="48" viewBox="0 0 512 512" aria-hidden="true" focusable="false" role="img" xmlns="http://www.w3.org/2000/svg"><path :fill="rightArrow.color" d="M240,352l0,94.201c0,12.134 7.309,23.073 18.52,27.716c11.21,4.644 24.113,2.077 32.693,-6.503c45.522,-45.522 143.645,-143.644 183.13,-183.13c15.621,-15.621 15.621,-40.947 0,-56.568l-183.13,-183.13c-8.58,-8.58 -21.483,-11.147 -32.693,-6.503c-11.211,4.643 -18.52,15.582 -18.52,27.716l0,94.201l-164.036,-0c-7.417,-0 -14.529,2.946 -19.774,8.19c-5.244,5.245 -8.19,12.357 -8.19,19.774c0,29.673 0,106.399 0,136.072c-0,7.417 2.946,14.529 8.19,19.774c5.245,5.244 12.357,8.19 19.774,8.19l164.036,-0Zm223.029,-112.971c9.373,9.373 9.373,24.569 0,33.942c-39.485,39.485 -137.607,137.607 -183.13,183.13c-4.003,4.003 -10.025,5.201 -15.257,3.034c-5.231,-2.167 -8.642,-7.272 -8.642,-12.934c0,-42.564 0,-110.201 0,-110.201l-180.036,0c-3.173,0 -6.216,-1.26 -8.46,-3.504c-2.244,-2.244 -3.504,-5.287 -3.504,-8.46l0,-136.072c-0,-3.173 1.26,-6.216 3.504,-8.46c2.244,-2.244 5.287,-3.504 8.46,-3.504l180.036,0l0,-110.201c0,-5.662 3.411,-10.767 8.642,-12.934c5.232,-2.167 11.254,-0.969 15.257,3.034c45.523,45.523 143.645,143.645 183.13,183.13Z"/></svg>    </div>
   </div>
 </template>
 
@@ -100,4 +102,18 @@ onMounted(() => {
 .img_image img {
   cursor: pointer;
 }
+
+.primary-left {
+  @apply bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l
+}
+.info-left {
+  @apply bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l opacity-50 cursor-not-allowed
+}
+.primary-right {
+  @apply bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r
+}
+.info-right {
+  @apply bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-r opacity-50 cursor-not-allowed
+}
+
 </style>

@@ -1,4 +1,5 @@
 <script setup>
+import PersonalGallery from "./PersonalGallery.vue";
 import { ref,computed, onMounted } from 'vue'
 import { useStompClientStore } from '@/stores/stompClient';
 import { useUserStore } from '@/stores/user'
@@ -7,14 +8,26 @@ import { storeToRefs } from 'pinia';
 defineProps({
   personalInfo: Object,
 })
-const userStore = useUserStore()
-const { user } = storeToRefs(userStore)
-
 const imgUrl = import.meta.env.VITE_IMG_URL;
+const isEdit = ref(false);
+
+const clickEdit = () => {
+  if(isEdit.value) {
+    isEdit.value = false;
+  } else {
+    isEdit.value = true;
+  }
+}
+const input = ref('')
+
 </script>
 
 <template>
-  <div class="grid grid-cols-2 gap-2">
+  <div v-if="!isEdit" class="p-8 pb-0">
+    <PersonalGallery :personalInfo = "personalInfo" />
+  </div>
+
+  <div v-if="!isEdit" class="grid grid-cols-2 gap-2 mt-2">
     <h2 >昵称：{{personalInfo.nickname}}</h2>
     <h3 >性别：{{personalInfo.gender}}</h3>
     <h3 >生日：{{personalInfo.birthday}}</h3>
@@ -43,8 +56,25 @@ const imgUrl = import.meta.env.VITE_IMG_URL;
     <h3 >犯罪历史：{{personalInfo.criminalHistory}}</h3>
     <h3 >简介：{{personalInfo.inctroduce}}</h3>
   </div>
+  <div>
+      <label class="mx-1">你的性别</label>
+      <input id="gender" name="gender" type="text" />
+  </div>
+  <div class="flex justify-center items-center py-2">
+    <button v-if="!isEdit" @click="clickEdit" type="primary" :icon = "Edit">
+      编辑
+    </button>
+    <button v-if="isEdit" @click="clickEdit" type="info" :icon = "Close">
+      取消
+    </button>
+    <button v-if="isEdit" @click="clickEdit" type="primary" :icon = "Check">
+      确定
+    </button>
+  </div>
 </template>
 
 <style scoped>
 
 </style>
+
+
