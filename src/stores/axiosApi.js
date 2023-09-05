@@ -3,13 +3,12 @@ import { ref, computed } from "vue";
 import { defineStore, acceptHMRUpdate } from "pinia";
 import { useUserStore } from "./user";
 import { storeToRefs } from "pinia";
-import ApiAddrs from "./apiAddrs.json";
+// import ApiAddrs from "./apiAddrs.json";
+import apiAddrs from "./apiAddrs";
 import { useRouter } from "vue-router";
 
 export const useAxiosApiStore = defineStore("axios-api", () => {
   const router = useRouter();
-  const apiAddrs = ref([]);
-  apiAddrs.value = ApiAddrs.data;
   const userStore = useUserStore();
   const { user, isLogin } = storeToRefs(userStore);
   const axiosClient = axios.create({
@@ -29,7 +28,7 @@ export const useAxiosApiStore = defineStore("axios-api", () => {
     } else {
       token = user.value.token;
     }
-    apiAddrs.value.forEach((element) => {
+    apiAddrs.data.forEach((element) => {
       if (element.name === name) {
         addr = element.addr;
       }

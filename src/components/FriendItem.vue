@@ -1,19 +1,17 @@
 <script setup>
-import YouTubeButton from './YouTubeButton.vue';
+import YouTubeButton from "./YouTubeButton.vue";
 
 defineProps({
   friend: {
     required: true,
-    type: Object
-  }
-})
+    type: Object,
+  },
+});
 const imgUrl = import.meta.env.VITE_IMG_URL;
 </script>
 
 <template>
-  <div
-    class="bg-white shadow rounded-xl hover:scale-105 transition-all"
-  >
+  <div class="bg-white shadow rounded-xl hover:scale-105 transition-all">
     <img
       :src="imgUrl + friend.userId + '/' + friend.avatar"
       alt="avatar"
@@ -27,5 +25,3 @@ const imgUrl = import.meta.env.VITE_IMG_URL;
     </div>
   </div>
 </template>
-
-
