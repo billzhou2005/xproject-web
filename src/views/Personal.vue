@@ -1,57 +1,78 @@
-
 <script setup>
 import PersonalCard from "../components/PersonalCard.vue";
+import PersonalGallery from "../components/PersonalGallery.vue";
+import PersonalEdit from "../components/PersonalEdit.vue";
 import { computed } from "@vue/reactivity";
 import { onMounted, ref } from "vue";
-import { useAxiosApiStore } from '@/stores/axiosApi'
-import { storeToRefs } from 'pinia';
-import { useUserStore } from '@/stores/user'
+import { useAxiosApiStore } from "@/stores/axiosApi";
+import { storeToRefs } from "pinia";
+import { useUserStore } from "@/stores/user";
 
-const userStore = useUserStore()
+const userStore = useUserStore();
 
-const apiStore = useAxiosApiStore()
-const { personalInfo } = storeToRefs(apiStore)
-
+const apiStore = useAxiosApiStore();
+const { personalInfo, response } = storeToRefs(apiStore);
+const isEdit = ref(false);
+const picked = ref(null);
+const handleEdit = () => {
+  isEdit.value = !isEdit.value;
+  if (personalInfo.value.birthday.length > 0) {
+    picked.value = new Date(personalInfo.value.birthday);
+  } else {
+    picked.value = new Date();
+  }
+  console.log("picked:", picked);
+};
+const handleSubmit = () => {
+  isEdit.value = !isEdit.value;
+  console.log("personalInfo:", personalInfo.value);
+  apiStore.dispatch("userUpdate", personalInfo.value);
+};
+const cancelSubmit = () => {
+  isEdit.value = !isEdit.value;
+  apiStore.dispatch("personalInfo", null);
+};
 onMounted(() => {
-  apiStore.dispatch('personalInfo', null)
+  apiStore.dispatch("personalInfo", null);
 });
 </script>
-
 
 <template>
   <div class="p-8 pb-0 text-orange-500">
     <h1 class="text-4xl font-bold mb-4">个人信息</h1>
   </div>
-  <div class="mx-auto">
-    <PersonalCard :personalInfo = "personalInfo" />
+  <div v-if="!isEdit" class="mx-auto">
+    <PersonalGallery :personalInfo="personalInfo" />
   </div>
-  <div class="px-8 py-8">
-    <button @click="userStore.logout" class="w-32 mx-2 btn-exit btn-exit-gray">
-      退出登陆
-    </button>
+  <div v-if="!isEdit" class="mx-auto">
+    <PersonalCard :personalInfo="personalInfo" />
   </div>
 
+  <div v-if="isEdit" class="mx-auto">
+    <PersonalEdit :personalInfo="personalInfo" />
+  </div>
+
+  <div class="flex justify-center items-center px-8 py-8">
+    <button
+      v-if="!isEdit"
+      @click="userStore.logout"
+      class="btn-info btn-info-gray"
+    >
+      退出登陆
+    </button>
+    <button v-if="!isEdit" @click="handleEdit" class="btn btn-blue">
+      编辑
+    </button>
+    <button v-if="isEdit" @click="cancelSubmit" class="btn-info btn-info-gray">
+      取消修改
+    </button>
+    <button v-if="isEdit" @click="handleSubmit" class="btn btn-blue">
+      确认修改
+    </button>
+  </div>
+  <div>response: {{ response }}</div>
 </template>
 
 <style scoped>
 /* my css with @apply */
-  .btn {
-    @apply font-bold py-2 px-4 rounded;
-  }
-  .btn-blue {
-    @apply bg-blue-500 text-white;
-  }
-  .btn-blue:hover {
-    @apply bg-blue-700;
-  }
-
-  .btn-exit {
-    @apply font-bold py-2 px-4 rounded;
-  }
-  .btn-exit-gray {
-    @apply bg-gray-500 text-white;
-  }
-  .btn-exit-gray:hover {
-    @apply bg-gray-700;
-  }
 </style>

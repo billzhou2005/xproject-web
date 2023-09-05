@@ -1,29 +1,20 @@
 <script setup>
-import { computed } from "@vue/reactivity";
-import { onMounted, ref } from "vue";
-import { useRoute } from "vue-router";
-import { useAxiosApiStore } from "@/stores/axiosApi";
-import { storeToRefs } from "pinia";
+import { ref, toRefs, onMounted } from "vue";
 import Datepicker from "vue3-datepicker";
 
-const picked = ref(new Date());
-const apiStore = useAxiosApiStore();
-const { personalInfo } = storeToRefs(apiStore);
+const props = defineProps({
+  personalInfo: Object,
+});
 
-const handleSubmit = () => {
-  console.log("datePicked:", picked.value);
-  console.log("personalInfo:", personalInfo.value);
-};
+const { personalInfo } = toRefs(props);
+const picked = ref(new Date(personalInfo.value.birthday));
 
 onMounted(() => {
-  apiStore.dispatch("personalInfo", null);
+  console.log("birthday: " + personalInfo.value.birthday);
 });
 </script>
 
 <template>
-  <div class="p-8 pb-0">
-    <h1 class="text-4xl font-bold mb-4 text-orange-500">Game</h1>
-  </div>
   <div class="grid grid-cols-2 gap-4">
     <div class="md:flex md:items-center mb-6">
       <div class="md:w-1/3">
@@ -394,14 +385,6 @@ onMounted(() => {
         </select>
       </div>
     </div>
-  </div>
-  <div class="flex justify-center items-center py-2">
-    <button
-      @click="handleSubmit"
-      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-    >
-      确认修改
-    </button>
   </div>
   <div>
     {{ personalInfo }}
