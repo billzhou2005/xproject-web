@@ -6,7 +6,7 @@ import { storeToRefs } from 'pinia';
 defineProps({
   personalInfo: Object,
 })
-const images = ref(['http://1.116.14.156:5186/uploads/samples/img_lights.jpg','http://1.116.14.156:5186/uploads/samples/img_mountains.jpg','http://1.116.14.156:5186/uploads/samples/img_nature.jpg','http://1.116.14.156:5186/uploads/samples/img_snow.jpg','http://1.116.14.156:5186/uploads/samples/img_mountains.jpg','http://1.116.14.156:5186/uploads/samples/img_nature.jpg','http://1.116.14.156:5186/uploads/samples/img_snow.jpg']);
+const images = ref(['http://1.116.14.156:5186/uploads/samples/img_lights.jpg','http://1.116.14.156:5186/uploads/samples/img_mountains.jpg','http://1.116.14.156:5186/uploads/samples/img_nature.jpg','http://1.116.14.156:5186/uploads/samples/img_snow.jpg','http://1.116.14.156:5186/uploads/samples/img_mountains.jpg','http://1.116.14.156:5186/uploads/samples/img_nature.jpg','http://1.116.14.156:5186/uploads/samples/zmb01.png']);
 
 
 const fullWidthImageIndex = ref(null)
@@ -74,7 +74,7 @@ onMounted(() => {
     <div class="img_image" v-for="(img, i) in images.slice(imageStart.count,imageStart.count+4)">
       <img 
       :src= img 
-      :class="getImageClass(i)"
+      class="h-48 object-fill hover:scale-125 transition duration-500 cursor-pointer"
       @click="onImageClick(i)"
       >
     </div>
@@ -100,7 +100,7 @@ onMounted(() => {
   z-index:100;
 }
 .img_image img {
-  cursor: pointer;
+  @apply object-fill cursor-pointer 
 }
 
 .primary-left {
