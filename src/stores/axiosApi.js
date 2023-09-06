@@ -33,7 +33,7 @@ export const useAxiosApiStore = defineStore("axios-api", () => {
         addr = element.addr;
       }
     });
-    console.log("addr:", addr, "token:", token, "params:", params);
+    //console.log("addr:", addr, "token:", token, "params:", params);
     axiosClient
       .post(addr, params, {
         headers: {
@@ -43,6 +43,7 @@ export const useAxiosApiStore = defineStore("axios-api", () => {
       .then(({ data }) => {
         console.log("axiosApiStore data:", data);
         if (data.msg !== "success") {
+          alert(data.msg);
           return;
         }
 

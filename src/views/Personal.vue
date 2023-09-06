@@ -13,15 +13,8 @@ const userStore = useUserStore();
 const apiStore = useAxiosApiStore();
 const { personalInfo, response } = storeToRefs(apiStore);
 const isEdit = ref(false);
-const picked = ref(null);
 const handleEdit = () => {
   isEdit.value = !isEdit.value;
-  if (personalInfo.value.birthday.length > 0) {
-    picked.value = new Date(personalInfo.value.birthday);
-  } else {
-    picked.value = new Date();
-  }
-  console.log("picked:", picked);
 };
 const handleSubmit = () => {
   isEdit.value = !isEdit.value;
