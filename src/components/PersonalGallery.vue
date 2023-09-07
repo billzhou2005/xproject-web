@@ -70,12 +70,12 @@ onMounted(() => {
 </script>
 
 <template>
-  <div v-if = "images.length > 0" class="grid grid-cols-4 gap-2" >
+  <div v-if = "images.length > 0" class="mx-10 grid grid-cols-4 gap-2" >
     <div class="img_image" v-for="(img, i) in images.slice(imageStart.count,imageStart.count+4)">
       <img 
       :src= img 
       class="h-48 object-fill hover:scale-125 transition duration-500 cursor-pointer"
-      @click="onImageClick(i)"
+      @click="onImageClick(i+imageStart.count)"
       >
     </div>
   </div>
@@ -88,6 +88,12 @@ onMounted(() => {
         <svg class="fill-current w-4 h-4 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M7.293 4.707 14.586 12l-7.293 7.293 1.414 1.414L17.414 12 8.707 3.293 7.293 4.707z"/></svg>
       </button>
     </div>
+  </div>
+  <div class="flex justify-center items-center py-2">
+    <img 
+      :src= images[fullWidthImageIndex] 
+      class="object-fill transition duration-500"
+      >
   </div>
 </template>
 

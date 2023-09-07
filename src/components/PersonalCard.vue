@@ -17,6 +17,10 @@ const annualIncome = computed(() => {
 
 function getDisplayStr(arr) {
   let dispStr = "";
+  if (arr === undefined) {
+    return dispStr;
+  }
+
   arr.forEach((element) => {
     dispStr += element;
     dispStr += ",";
@@ -44,7 +48,7 @@ const pets = computed(() => {
 </script>
 
 <template>
-  <div class="grid grid-cols-2 gap-2 mt-2">
+  <div class="grid grid-cols-2 gap-2 mt-2 mx-10">
     <h2>昵称：{{ personalInfo.nickname }}</h2>
     <h3>性别：{{ personalInfo.gender }}</h3>
     <h3>生日：{{ personalInfo.birthday }}</h3>

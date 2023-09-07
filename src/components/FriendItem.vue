@@ -13,7 +13,7 @@ const imgUrl = import.meta.env.VITE_IMG_URL;
 <template>
   <div class="bg-white shadow rounded-xl hover:scale-105 transition-all">
     <img
-      :src="imgUrl + friend.userId + '/' + friend.avatar"
+      :src="imgUrl + friend.avatar"
       alt="avatar"
       class="rounded-t-xl w-full h-48 object-cover"
     />

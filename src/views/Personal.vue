@@ -63,7 +63,6 @@ onMounted(() => {
       确认修改
     </button>
   </div>
-  <div>response: {{ response }}</div>
 </template>
 
 <style scoped>
