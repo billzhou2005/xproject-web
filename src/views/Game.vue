@@ -8,7 +8,7 @@ import Datepicker from "vue3-datepicker";
 import axiosClient from "@/stores/axiosClient";
 
 const apiStore = useAxiosApiStore();
-const { response } = storeToRefs(apiStore);
+const { response, personalInfo } = storeToRefs(apiStore);
 
 const previewFile = ref(null);
 const file = ref(null);
@@ -32,10 +32,70 @@ function readURL(input) {
     reader.readAsDataURL(input.target.files[0]);
   }
 }
-const handleUplpoad = () => {
-  const formData = new FormData();
-  formData.append("file", file.value);
-  apiStore.dispatch("fileUpload", formData);
+const handleFileUpload = () => {
+  // const formData = new FormData();
+  // formData.append("file", file.value);
+  // apiStore.dispatch("fileUpload", formData);
+  fileUploadProcess();
+};
+
+async function fileUploadProcess() {
+  await method1();
+  await method2();
+}
+
+const fileNameReturn = ref(null);
+const method1 = () => {
+  return new Promise((resolve, reject) => {
+    console.log("file.value:", file.value);
+    if (file.value === null) {
+      alert("未选择文件！");
+      return;
+    }
+    const formData = new FormData();
+    formData.append("file", file.value);
+    axiosClient
+      .post("file/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "x-token":
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJ1c2VycVR4bTIwMjMwNTIwMjA1MTI5MCIsIk5pY2tuYW1lIjoiYmlsbHpob3UyMDA4IiwiZXhwIjoxNjk2MDM5ODk3LCJpc3MiOiJwY21hbGwifQ.pwVHFtMkFbq5SERuzso_9iPQ_xoky3ur1tiR9BQSVCY",
+        },
+      })
+      .then((res) => {
+        console.log("method1", res);
+        fileNameReturn.value = res.data.data;
+        console.log("fileNameReturn.value", fileNameReturn.value);
+        resolve();
+      });
+  });
+};
+const params = ref({ photos: [] });
+const method2 = () => {
+  return new Promise((resolve, reject) => {
+    if (personalInfo.value.photos !== undefined) {
+      personalInfo.value.photos.unshift(fileNameReturn.value);
+      params.value.photos = personalInfo.value.photos;
+    } else {
+      params.value.photos.unshift(fileNameReturn.value);
+      personalInfo.value.photos = params.value.photos;
+    }
+    console.log("personalInfo.photos", personalInfo.value.photos);
+    axiosClient
+      .post("user/update", params.value, {
+        headers: {
+          "x-token":
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJ1c2VycVR4bTIwMjMwNTIwMjA1MTI5MCIsIk5pY2tuYW1lIjoiYmlsbHpob3UyMDA4IiwiZXhwIjoxNjk2MDM5ODk3LCJpc3MiOiJwY21hbGwifQ.pwVHFtMkFbq5SERuzso_9iPQ_xoky3ur1tiR9BQSVCY",
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        if (res.data.msg === "success") {
+          alert("图片上传成功！");
+        }
+        resolve();
+      });
+  });
 };
 
 onMounted(() => {
@@ -60,7 +120,7 @@ onMounted(() => {
 
     <img id="blah" :src="previewFile" alt="your image" />
     <button
-      @click="handleUplpoad"
+      @click="handleFileUpload"
       class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
     >
       上传文件
@@ -68,6 +128,7 @@ onMounted(() => {
   </div>
   <div>
     {{ response }}
+    {{ personalInfo }}
   </div>
 </template>
 
