@@ -28,16 +28,22 @@ export const useAxiosApiStore = defineStore("axios-api", () => {
     } else {
       token = user.value.token;
     }
+    let contentType = "application/json";
+    if (name === "fileUpload") {
+      contentType = "multipart/form-data";
+    }
+
     apiAddrs.data.forEach((element) => {
       if (element.name === name) {
         addr = element.addr;
       }
     });
-    //console.log("addr:", addr, "token:", token, "params:", params);
-    console.log("token:", token);
+    console.log("addr:", addr, "token:", token, "params:", params);
+    console.log("contentType:", contentType);
     axiosClient
       .post(addr, params, {
         headers: {
+          "Content-Type": contentType,
           "x-token": token,
         },
       })
