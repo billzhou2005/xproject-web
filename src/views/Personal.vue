@@ -10,6 +10,11 @@ import { useUserStore } from "@/stores/user";
 
 const userStore = useUserStore();
 
+const isImageUpload = ref(false);
+const ImageUpload = (data) => {
+  isImageUpload.value = data;
+};
+
 const apiStore = useAxiosApiStore();
 const { personalInfo, response } = storeToRefs(apiStore);
 const isEdit = ref(false);
@@ -35,31 +40,46 @@ onMounted(() => {
     <h1 class="text-4xl font-bold mb-4">个人信息</h1>
   </div>
   <div v-if="!isEdit" class="mx-auto">
-    <PersonalGallery :personalInfo="personalInfo" />
+    <PersonalGallery
+      :personalInfo="personalInfo"
+      @changeImageUpload="ImageUpload"
+    />
   </div>
-  <div v-if="!isEdit" class="mx-auto">
+  <div v-if="!isEdit && !isImageUpload" class="mx-auto">
     <PersonalCard :personalInfo="personalInfo" />
   </div>
 
-  <div v-if="isEdit" class="mx-auto">
+  <div v-if="isEdit && !isImageUpload" class="mx-auto">
     <PersonalEdit :personalInfo="personalInfo" />
   </div>
 
   <div class="flex justify-center items-center px-8 py-8">
     <button
-      v-if="!isEdit"
+      v-if="!isEdit && !isImageUpload"
       @click="userStore.logout"
       class="btn-info btn-info-gray"
     >
       退出登陆
     </button>
-    <button v-if="!isEdit" @click="handleEdit" class="btn btn-blue">
+    <button
+      v-if="!isEdit && !isImageUpload"
+      @click="handleEdit"
+      class="btn btn-blue"
+    >
       编辑
     </button>
-    <button v-if="isEdit" @click="cancelSubmit" class="btn-info btn-info-gray">
+    <button
+      v-if="isEdit && !isImageUpload"
+      @click="cancelSubmit"
+      class="btn-info btn-info-gray"
+    >
       取消修改
     </button>
-    <button v-if="isEdit" @click="handleSubmit" class="btn btn-blue">
+    <button
+      v-if="isEdit && !isImageUpload"
+      @click="handleSubmit"
+      class="btn btn-blue"
+    >
       确认修改
     </button>
   </div>

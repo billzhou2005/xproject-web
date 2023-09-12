@@ -1,22 +1,38 @@
 <script setup>
-import { ref, computed, reactive, onMounted } from "vue";
-import { useStompClientStore } from "@/stores/stompClient";
-import { useUserStore } from "@/stores/user";
-import { storeToRefs } from "pinia";
-defineProps({
+import { ref, computed, reactive, toRefs, onMounted } from "vue";
+import ImageUpload from "./ImageUpload.vue";
+const props = defineProps({
   personalInfo: Object,
 });
-const images = ref([
-  "http://1.116.14.156:5186/uploads/samples/img_lights.jpg",
-  "http://1.116.14.156:5186/uploads/samples/img_mountains.jpg",
-  "http://1.116.14.156:5186/uploads/samples/img_nature.jpg",
-  "http://1.116.14.156:5186/uploads/samples/img_snow.jpg",
-  "http://1.116.14.156:5186/uploads/samples/img_mountains.jpg",
-  "http://1.116.14.156:5186/uploads/samples/img_nature.jpg",
-  "http://1.116.14.156:5186/uploads/samples/zmb01.png",
-]);
 
+const { personalInfo } = toRefs(props);
+const emit = defineEmits(["changeImageUpload"]);
+const isImageUpload = ref(false);
+const handleIsImageUpload = () => {
+  isImageUpload.value = !isImageUpload.value;
+  emit("changeImageUpload", isImageUpload.value);
+};
+// const images = ref([
+//   "http://1.116.14.156:5186/uploads/samples/img_lights.jpg",
+//   "http://1.116.14.156:5186/uploads/samples/img_mountains.jpg",
+//   "http://1.116.14.156:5186/uploads/samples/img_nature.jpg",
+//   "http://1.116.14.156:5186/uploads/samples/img_snow.jpg",
+//   "http://1.116.14.156:5186/uploads/samples/img_mountains.jpg",
+//   "http://1.116.14.156:5186/uploads/samples/img_nature.jpg",
+//   "http://1.116.14.156:5186/uploads/samples/zmb01.png",
+// ]);
+const imgUrl = import.meta.env.VITE_IMG_URL;
 const fullWidthImageIndex = ref(null);
+const imgMaxLen = computed(() => {
+  if (personalInfo.value.photos !== undefined) {
+    if (personalInfo.value.photos.length > 4) {
+      return 4;
+    } else {
+      return personalInfo.value.photos.length;
+    }
+  }
+});
+
 const getImageClass = (i) => {
   return {
     fullWidthImage: fullWidthImageIndex.value === i,
@@ -38,7 +54,7 @@ const handleLeft = () => {
   if (imageStart.count > 0) {
     imageStart.count -= 1;
   }
-  if (images.value.length - imageStart.count > 4) {
+  if (personalInfo.value.photos.length - imageStart.count > 4) {
     rightArrow.type = "primary-right";
   } else {
     rightArrow.type = "info-right";
@@ -50,15 +66,15 @@ const handleLeft = () => {
   }
 };
 const handleRight = () => {
-  if (images.value.length < 5) {
+  if (personalInfo.value.photos.length < 5) {
     return;
   }
-  if (images.value.length - imageStart.count < 5) {
+  if (personalInfo.value.photos.length - imageStart.count < 5) {
     rightArrow.type = "info-right";
     return;
   }
   imageStart.count += 1;
-  if (images.value.length - imageStart.count > 4) {
+  if (personalInfo.value.photos.length - imageStart.count > 4) {
     rightArrow.type = "primary-right";
   } else {
     rightArrow.type = "info-right";
@@ -70,26 +86,39 @@ const handleRight = () => {
   }
 };
 onMounted(() => {
-  if (images.value.length > 4) {
+  if (
+    personalInfo.value === undefined ||
+    personalInfo.value.photos === undefined
+  ) {
+    return;
+  }
+  if (personalInfo.value.photos.length > 4) {
     rightArrow.type = "primary-right";
   }
 });
 </script>
 
 <template>
-  <div v-if="images.length > 0" class="mx-10 grid grid-cols-4 gap-2">
+  <ImageUpload v-if="isImageUpload" @finishImageUpload="handleIsImageUpload" />
+  <div
+    v-if="personalInfo.photos !== undefined && !isImageUpload"
+    class="mx-10 grid grid-cols-4 gap-2"
+  >
     <div
       class="img_image"
-      v-for="(img, i) in images.slice(imageStart.count, imageStart.count + 4)"
+      v-for="(img, i) in personalInfo.photos.slice(
+        imageStart.count,
+        imageStart.count + imgMaxLen
+      )"
     >
       <img
-        :src="img"
+        :src="imgUrl + img"
         class="h-48 object-fill hover:scale-125 transition duration-500 cursor-pointer"
         @click="onImageClick(i + imageStart.count)"
       />
     </div>
   </div>
-  <div class="flex justify-center items-center py-2">
+  <div v-if="!isImageUpload" class="flex justify-center items-center py-2">
     <div class="inline-flex">
       <button @click="handleLeft" :class="leftArrow.type">
         <svg
@@ -113,11 +142,29 @@ onMounted(() => {
           />
         </svg>
       </button>
+      <button class="plus" @click="handleIsImageUpload">
+        <svg
+          class="fill-current w-4 h-4 mr-2"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 20 20"
+        >
+          <path
+            d="M4 12H20M12 4V20"
+            stroke="#000000"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></path>
+        </svg>
+      </button>
     </div>
   </div>
-  <div class="flex justify-center items-center py-2">
+  <div
+    v-if="fullWidthImageIndex !== null && !isImageUpload"
+    class="flex justify-center items-center py-2"
+  >
     <img
-      :src="images[fullWidthImageIndex]"
+      :src="imgUrl + personalInfo.photos[fullWidthImageIndex]"
       class="object-fill transition duration-500"
     />
   </div>
@@ -135,6 +182,9 @@ onMounted(() => {
   @apply object-fill cursor-pointer;
 }
 
+.plus {
+  @apply bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold mx-2 py-2 px-4;
+}
 .primary-left {
   @apply bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-l;
 }

@@ -1,13 +1,16 @@
 <script setup>
 import { computed } from "@vue/reactivity";
 import { onMounted, ref } from "vue";
-import { useRoute } from "vue-router";
 import { useAxiosApiStore } from "@/stores/axiosApi";
 import { storeToRefs } from "pinia";
 import axiosClient from "@/stores/axiosClient";
 
 const apiStore = useAxiosApiStore();
-const { response, personalInfo } = storeToRefs(apiStore);
+const { personalInfo } = storeToRefs(apiStore);
+const emit = defineEmits(["finishImageUpload"]);
+const handleFinish = () => {
+  emit("finishImageUpload", true);
+};
 
 const previewFile = ref(null);
 const file = ref(null);
@@ -119,8 +122,6 @@ onMounted(() => {
 
 <template>
   <div class="p-8 pb-0">
-    <h1 class="text-4xl font-bold mb-4 text-orange-500">Test</h1>
-
     <div class="flex flex-row items-center">
       <input @change="readURL" type="file" id="custom-input" hidden />
       <label
@@ -140,6 +141,12 @@ onMounted(() => {
       </button>
       <span v-if="uploading">上传中 {{ count }}</span>
     </div>
+    <button
+      @click="handleFinish"
+      class="bg-blue-500 disabled:bg-gray-300 hover:bg-blue-700 text-white font-bold mx-2 my-5 py-2 px-4 rounded"
+    >
+      返回
+    </button>
   </div>
 </template>
 
