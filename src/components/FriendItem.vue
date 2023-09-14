@@ -11,11 +11,13 @@ const imgUrl = import.meta.env.VITE_IMG_URL;
 
 <template>
   <div class="bg-white shadow rounded-xl hover:scale-105 transition-all">
-    <img
-      :src="imgUrl + friend.avatar"
-      alt="avatar"
-      class="rounded-t-xl w-full h-48 object-cover"
-    />
+    <router-link :to="{ name: 'friendDetails', params: { userId: friend.userId } }">
+      <img
+        :src="imgUrl + friend.avatar"
+        alt="avatar"
+        class="rounded-t-xl w-full h-48 object-cover"
+      />
+    </router-link>
     <div class="p-3 grid grid-cols-2 gap-4">
       <div class="mx-2">
         <h3 class="font-bold">{{ friend.nickname }}</h3>

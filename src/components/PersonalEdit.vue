@@ -553,7 +553,4 @@ onMounted(() => {
       </div>
     </div>
   </div>
-  <div>
-    {{ personalInfo }}
-  </div>
 </template>

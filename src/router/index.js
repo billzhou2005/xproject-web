@@ -11,6 +11,7 @@ import MealDetails from '../views/MealDetails.vue'
 import Personal from '../views/Personal.vue'
 import Chats from '../views/Chats.vue'
 import Game from '../views/Game.vue'
+import FriendDetails from '../views/FriendDetails.vue'
 
 const routes = [
   {
@@ -22,6 +23,11 @@ const routes = [
         name: "home",
         component: Home,
       },
+      {
+        path: "/friend/:userId",
+        name: "friendDetails",
+        component: FriendDetails,
+      },      
       {
         path: "/chats/:userId",
         name: "chats",
