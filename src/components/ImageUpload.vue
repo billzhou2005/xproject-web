@@ -59,6 +59,7 @@ async function fileUploadProcess() {
   await method2();
 }
 
+const user = JSON.parse(localStorage.user);
 const fileNameReturn = ref(null);
 const method1 = () => {
   return new Promise((resolve, reject) => {
@@ -74,8 +75,7 @@ const method1 = () => {
       .post("file/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-          "x-token":
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJ1c2VycVR4bTIwMjMwNTIwMjA1MTI5MCIsIk5pY2tuYW1lIjoiYmlsbHpob3UyMDA4IiwiZXhwIjoxNjk2MDM5ODk3LCJpc3MiOiJwY21hbGwifQ.pwVHFtMkFbq5SERuzso_9iPQ_xoky3ur1tiR9BQSVCY",
+          "x-token":user.user.token
         },
       })
       .then((res) => {
@@ -96,16 +96,15 @@ const method2 = () => {
       params.value.photos.unshift(fileNameReturn.value);
       personalInfo.value.photos = params.value.photos;
     }
-    console.log("personalInfo.photos", personalInfo.value.photos);
+    //console.log("personalInfo.photos", personalInfo.value.photos);
     axiosClient
       .post("user/update", params.value, {
         headers: {
-          "x-token":
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOiJ1c2VycVR4bTIwMjMwNTIwMjA1MTI5MCIsIk5pY2tuYW1lIjoiYmlsbHpob3UyMDA4IiwiZXhwIjoxNjk2MDM5ODk3LCJpc3MiOiJwY21hbGwifQ.pwVHFtMkFbq5SERuzso_9iPQ_xoky3ur1tiR9BQSVCY",
+          "x-token":user.user.token
         },
       })
       .then((res) => {
-        console.log(res);
+        //console.log(res);
         if (res.data.msg === "success") {
           alert("图片上传成功！");
           stopUploading();

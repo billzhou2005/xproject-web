@@ -5,7 +5,9 @@ import { computed, onMounted, onBeforeUnmount, ref, watch } from "vue";
 import ContactData from '@/stores/contacts.json'
 import { useUserStore } from '@/stores/user'
 import { storeToRefs } from 'pinia';
+import { useRoute } from 'vue-router';
 
+const route = useRoute();
 const userStore = useUserStore()
 const { user, isLogin } = storeToRefs(userStore)
 
@@ -30,9 +32,10 @@ const changeContact=(val)=>{
 
 // watch(chats.value, goToBottom)
 
-// onMounted(() => {
-//   goToBottom()
-// })
+ onMounted(() => {
+  console.log("userId:", route.params.userId)
+   //goToBottom()
+ })
 
 </script>
 

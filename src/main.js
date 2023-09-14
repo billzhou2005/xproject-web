@@ -16,6 +16,7 @@ function checkRouter(path) {
   let hasCheck = router
     .getRoutes()
     .filter((route) => route.path == path).length;
+    console.log(hasCheck, "path:");
   return hasCheck;
 }
 router.beforeEach((to, from, next) => {
@@ -25,7 +26,7 @@ router.beforeEach((to, from, next) => {
     //console.log("........")
     let user = JSON.parse(localStorage.user);
     isLogin = user.isLogin;
-    //console.log("isLogin:", isLogin)
+    //console.log("localStorage.user.token:", user.user.token);
   }
   //console.log("to.path",to.path)
   if (!isLogin) {
@@ -34,10 +35,12 @@ router.beforeEach((to, from, next) => {
     } else {
       next({ name: "guest" });
     }
-  } else if (!checkRouter(to.path)) {
-    //console.log("branch-3")
-    next({ name: "home" });
-  } else {
+  } 
+  // else if (!checkRouter(to.path)) {
+  //   console.log("branch-3")
+  //   next({ name: "home" });
+  // } 
+  else {
     if (to.name === "guest" || to.name === "registration") {
       next({ name: "home" });
     } else {

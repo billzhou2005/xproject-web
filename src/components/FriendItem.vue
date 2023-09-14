@@ -1,5 +1,4 @@
 <script setup>
-import YouTubeButton from "./YouTubeButton.vue";
 
 defineProps({
   friend: {
@@ -17,10 +16,18 @@ const imgUrl = import.meta.env.VITE_IMG_URL;
       alt="avatar"
       class="rounded-t-xl w-full h-48 object-cover"
     />
-    <div class="p-3">
-      <h3 class="font-bold">{{ friend.nickname }}</h3>
-      <div class="flex items-center justify-between">
-        <YouTubeButton :href="friend.introduce" />
+    <div class="p-3 grid grid-cols-2 gap-4">
+      <div class="mx-2">
+        <h3 class="font-bold">{{ friend.nickname }}</h3>
+        <p>{{ friend.gender }}</p>
+        <p>{{ friend.introduce }}</p>
+      </div>
+      <div class="mx-4 my-2 ">
+        <router-link
+          :to="{ name: 'chats', params: { userId: friend.userId } }"
+        >
+          <img class="h-12 float-right" src = "/icon/chat.svg" alt="chat SVG"/>
+        </router-link>
       </div>
     </div>
   </div>
