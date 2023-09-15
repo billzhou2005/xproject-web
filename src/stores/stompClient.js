@@ -6,7 +6,7 @@ export const useStompClientStore = defineStore('stomp-client', () => {
   const chatsMsg = ref([])
 
   const client = new Client({
-    brokerURL: 'ws://192.168.0.102:15674/ws',
+    brokerURL: 'ws://1.116.14.156:15674/ws',
     connectHeaders: {
       login: "xproject",
       passcode: "zhoumb1202",
@@ -14,7 +14,7 @@ export const useStompClientStore = defineStore('stomp-client', () => {
     debug: function (str) {
       console.log(str);
     },
-    reconnectDelay: 5000,
+    reconnectDelay: 3000,
     heartbeatIncoming: 4000,
     heartbeatOutgoing: 4000,
   });
