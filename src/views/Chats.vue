@@ -7,10 +7,6 @@ import { useUserStore } from "@/stores/user";
 import { useStompClientStore } from "@/stores/stompClient";
 import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
-import { useAxiosApiStore } from "@/stores/axiosApi";
-
-const apiStore = useAxiosApiStore();
-const { friends } = storeToRefs(apiStore);
 
 const route = useRoute();
 const userStore = useUserStore();
@@ -23,6 +19,9 @@ const chatcontent = ref(null);
 const textMsg = ref(null);
 const contacts = ref([]);
 const friendId = ref(null);
+const chatId = ref(null);
+chatId.value = "chat-personal-8821"
+
 contacts.value = ContactData.contacts;
 
 const goToBottom = () => {
@@ -39,21 +38,12 @@ const handlerSendText = () => {
     avatar: user.value.avatar,
     userId: user.value.userId,
   }
-  let receiver = {
-    nickname: "",
-    avatar: "",
-    userId: ""
-  }
-  friends.value.forEach(friend => {
-    if (friend.userId == friendId.value) {
-      receiver.nickname = friend.nickname
-      receiver.avatar = friend.avatar
-      receiver.userId = friend.userId
-    }
-  });
+  let recipients = [];
+  recipients.push(friendId.value);
   const body = {
+    chatId: chatId.value,
     sender: sender,
-    receiver: receiver,
+    recipients: recipients,
     category: "text",
     content: textMsg.value,
     time: new Date()

@@ -19,12 +19,12 @@ export const useStompClientStore = defineStore('stomp-client', () => {
     heartbeatOutgoing: 5000,
   });
   
-  const exchange = '/exchange/xproject/chat-personal-8821';
+  const exchange = '/exchange/xproject.topic/';
   client.onConnect = function (frame) {
     console.log(frame)
     //const exchange = '/exchange/xproject/awesome-game-8821';
     //client.subscribe(exchange, responseCallback, { id: "billzhou" });//订阅消息
-    client.subscribe(exchange, responseCallback);//订阅消息
+    client.subscribe(exchange+'chat-personal-8821', responseCallback);//订阅消息
   };
   
   const responseCallback = (message) => {
@@ -45,7 +45,7 @@ export const useStompClientStore = defineStore('stomp-client', () => {
   
   const msgPublisher = (body) => {
     // var body = {"sender":sender,"category":category,"content":content,"receivers":receivers, time:new Date()};
-    client.publish({ destination: exchange, body: JSON.stringify(body) });
+    client.publish({ destination: exchange+body.chatId, body: JSON.stringify(body) });
   }
   return { 
     chatsMsg,
