@@ -14,22 +14,23 @@ export const useStompClientStore = defineStore('stomp-client', () => {
     debug: function (str) {
       console.log(str);
     },
-    reconnectDelay: 3000,
-    heartbeatIncoming: 4000,
-    heartbeatOutgoing: 4000,
+    reconnectDelay: 5000,
+    heartbeatIncoming: 5000,
+    heartbeatOutgoing: 5000,
   });
   
+  const exchange = '/exchange/xproject/chat-personal-8821';
   client.onConnect = function (frame) {
     console.log(frame)
     //const exchange = '/exchange/xproject/awesome-game-8821';
-    const exchange2 = '/exchange/xproject/awesome-chat-8821';
     //client.subscribe(exchange, responseCallback, { id: "billzhou" });//订阅消息
-    client.subscribe(exchange2, responseCallback);//订阅消息
+    client.subscribe(exchange, responseCallback);//订阅消息
   };
   
   const responseCallback = (message) => {
+    //console.log("received messange:", message)
     const msg = JSON.parse(message.body)
-    console.log(msg)
+    console.log("received message.body:", msg)
     chatsMsg.value.push(msg)
   }
 
@@ -42,17 +43,14 @@ export const useStompClientStore = defineStore('stomp-client', () => {
     console.log('Additional details: ' + frame.body);
   };
   
-  const textMsgPublisher = (textMsg) => {
-    const exchange2 = '/exchange/xproject/awesome-chat-8821';
-    var body = {"sender":{"userId":"uid202302","name":"Katty","avatar":"./avatar2.jpg"},"category":"text","content":textMsg,"receiver":{"userId":"uid202301","name":"Bill","avatar":"./avatar1.jpg"}};
-    client.publish({ destination: exchange2, body: body });
-    //store.state.client.send(exchange2, {}, JSON.stringify(body));
-    //client.value.send({ destination: '/topic/test01', body: 'First Message' });
+  const msgPublisher = (body) => {
+    // var body = {"sender":sender,"category":category,"content":content,"receivers":receivers, time:new Date()};
+    client.publish({ destination: exchange, body: JSON.stringify(body) });
   }
   return { 
     chatsMsg,
     client,
-    textMsgPublisher
+    msgPublisher
    }
 })
 

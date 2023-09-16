@@ -3,18 +3,20 @@ import { ref } from 'vue'
 
 defineProps({
   data: Array,
+  user: Object,
 })
+const imgUrl = import.meta.env.VITE_IMG_URL;
 
 </script>
 
 <template>
     <div class="chat" v-for = "chat in data">
-        <div class="content-right" v-if="chat.sender.userId === 'uid202301'">
+        <div class="content-right" v-if="chat.sender.userId === user.userId ">
           <span> {{ chat.content }} </span>
-          <img class="avatar" src="./avatar1.jpg" alt="avatar"/>
+          <img class="avatar" :src="imgUrl+chat.sender.avatar" alt="avatar"/>
         </div>
         <div class="content-left" v-else>
-          <img class="avatar" src="./avatar2.jpg" alt="avatar"/>
+          <img class="avatar" :src="imgUrl+chat.sender.avatar" alt="avatar" />
           <span> {{ chat.content }} </span>
         </div>
     </div>

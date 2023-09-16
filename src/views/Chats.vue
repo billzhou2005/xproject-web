@@ -7,17 +7,22 @@ import { useUserStore } from "@/stores/user";
 import { useStompClientStore } from "@/stores/stompClient";
 import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
+import { useAxiosApiStore } from "@/stores/axiosApi";
+
+const apiStore = useAxiosApiStore();
+const { friends } = storeToRefs(apiStore);
 
 const route = useRoute();
 const userStore = useUserStore();
-const { user, isLogin } = storeToRefs(userStore);
+const { user } = storeToRefs(userStore);
 
 const stompClientStore = useStompClientStore();
-const { client } = storeToRefs(stompClientStore);
+const { chatsMsg } = storeToRefs(stompClientStore);
 
 const chatcontent = ref(null);
 const textMsg = ref(null);
 const contacts = ref([]);
+const friendId = ref(null);
 contacts.value = ContactData.contacts;
 
 const goToBottom = () => {
@@ -28,6 +33,32 @@ const goToBottom = () => {
 
 const handlerSendText = () => {
   console.log("send text:", textMsg.value);
+  console.log("user:", user)
+  const sender = {
+    nickname: user.value.nickname,
+    avatar: user.value.avatar,
+    userId: user.value.userId,
+  }
+  let receiver = {
+    nickname: "",
+    avatar: "",
+    userId: ""
+  }
+  friends.value.forEach(friend => {
+    if (friend.userId == friendId.value) {
+      receiver.nickname = friend.nickname
+      receiver.avatar = friend.avatar
+      receiver.userId = friend.userId
+    }
+  });
+  const body = {
+    sender: sender,
+    receiver: receiver,
+    category: "text",
+    content: textMsg.value,
+    time: new Date()
+  }
+  stompClientStore.msgPublisher(body)
   textMsg.value = "";
 };
 const changeContact = (val) => {
@@ -38,6 +69,7 @@ const changeContact = (val) => {
 
 onMounted(() => {
   console.log("userId:", route.params.userId);
+  friendId.value = route.params.userId;
   //goToBottom()
 });
 </script>
@@ -49,10 +81,11 @@ onMounted(() => {
     </div>
     <div class="chatting">
       <div ref="chatcontent" class="chats">
-        <Chat :data="chats" />
+        <Chat :data="chatsMsg" :user = "user" />
       </div>
       <div>
         <input
+        class="shadow appearance-none border border-blue-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
           v-model="textMsg"
           type="text"
           @keyup.enter.native="handlerSendText"

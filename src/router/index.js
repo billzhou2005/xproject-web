@@ -29,7 +29,7 @@ const routes = [
         component: FriendDetails,
       },      
       {
-        path: "/chats/:userId",
+        path: "/chats/:userId?",
         name: "chats",
         component: Chats,
       },      

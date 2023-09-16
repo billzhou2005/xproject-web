@@ -1,12 +1,9 @@
 <script setup>
 import { computed, onBeforeMount, onMounted, ref } from "vue";
 import Friends from "../components/Friends.vue";
-import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
 import { useAxiosApiStore } from "@/stores/axiosApi";
 
-const userStore = useUserStore();
-const { user, isLogin } = storeToRefs(userStore);
 const apiStore = useAxiosApiStore();
 const { friends } = storeToRefs(apiStore);
 

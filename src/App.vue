@@ -1,12 +1,14 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, watch } from "vue";
-import { storeToRefs } from "pinia";
 import { useStompClientStore } from "@/stores/stompClient";
 
 const stompClientStore = useStompClientStore();
 onMounted(() => {
   stompClientStore.client.activate();
 });
+onBeforeUnmount(() => {
+  stompClientStore.client.deactivate();
+})
 </script>
 
 <template>
