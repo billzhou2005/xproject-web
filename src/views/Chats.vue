@@ -27,7 +27,13 @@ const chatId = ref(null);
 
 contacts.value = ContactData.contacts;
 
-const chatsMsgCount = computed(() => chatsMsg.value.length);
+const chatsMsgCount = computed(() => {
+  if (chatsMsg.value ===null) {
+    return 0
+  } else {
+    return chatsMsg.value.length
+  }
+});
 const goToBottom = () => {
   setTimeout(() => {
     chatcontent.value.scrollTop = chatcontent.value.scrollHeight;
@@ -104,6 +110,9 @@ onMounted(() => {
         </button>
       </div>
     </div>
+  </div>
+  <div>
+    chantHistory: {{ chatHistory }}
   </div>
 </template>
 

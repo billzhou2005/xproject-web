@@ -1,5 +1,5 @@
 <script setup>
-
+import { ref } from "vue"
 defineProps({
   friend: {
     required: true,
@@ -7,6 +7,9 @@ defineProps({
   },
 });
 const imgUrl = import.meta.env.VITE_IMG_URL;
+const user = ref({});
+user.value = JSON.parse(localStorage.user);
+
 </script>
 
 <template>
@@ -24,7 +27,7 @@ const imgUrl = import.meta.env.VITE_IMG_URL;
         <p>{{ friend.gender }}</p>
         <p>{{ friend.introduce }}</p>
       </div>
-      <div class="mx-4 my-2 ">
+      <div v-if="friend.userId !== user.user.userId" class="mx-4 my-2 ">
         <router-link
           :to="{ name: 'chats', params: { userId: friend.userId } }"
         >

@@ -4,6 +4,8 @@ import { defineStore, acceptHMRUpdate } from "pinia";
 
 export const useStompClientStore = defineStore("stomp-client", () => {
   const chatsMsg = ref([]);
+  const chatLineSelected = ref({});
+
   const subscribedChatIds = ref([]);
 
   const client = new Client({
@@ -35,7 +37,10 @@ export const useStompClientStore = defineStore("stomp-client", () => {
     //console.log("received messange:", message)
     const msg = JSON.parse(message.body);
     console.log("received message.body:", msg);
-    chatsMsg.value.push(msg);
+    let nid = msg.chatId.replace(/chat-personal-/g,"")
+    if(chatLineSelected.value.chatId === nid) {
+      chatsMsg.value.push(msg);
+    }
   };
 
   client.onStompError = function (frame) {
@@ -50,15 +55,16 @@ export const useStompClientStore = defineStore("stomp-client", () => {
   const msgPublisher = (body) => {
     // var body = {"sender":sender,"category":category,"content":content,"receivers":receivers, time:new Date()};
     let isFound = false;
+    console.log("body.chatId",body.chatId)
+    console.log("subscribedChatIds.value",subscribedChatIds.value)
+
     subscribedChatIds.value.forEach((chatId) => {
       if (chatId === body.chatId) {
         isFound = true;
       }
     });
     if (!isFound) {
-      client.subscribe(exchange + body.chatId, responseCallback, {
-        id: body.sender.userId,
-      }); //订阅消息
+      client.subscribe(exchange + body.chatId, responseCallback); //订阅消息
       subscribedChatIds.value.push(body.chatId);
     }
 
@@ -69,6 +75,7 @@ export const useStompClientStore = defineStore("stomp-client", () => {
   };
   return {
     chatsMsg,
+    chatLineSelected,
     client,
     subscribedChatIds,
     msgPublisher,
