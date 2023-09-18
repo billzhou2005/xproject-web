@@ -26,7 +26,7 @@ router.beforeEach((to, from, next) => {
     //console.log("........")
     let user = JSON.parse(localStorage.user);
     isLogin = user.isLogin;
-    //console.log("localStorage.user.token:", user.user.token);
+    console.log("localStorage.user.token:", user.user.token);
   }
   //console.log("to.path",to.path)
   if (!isLogin) {

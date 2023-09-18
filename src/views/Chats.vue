@@ -7,6 +7,10 @@ import { useUserStore } from "@/stores/user";
 import { useStompClientStore } from "@/stores/stompClient";
 import { storeToRefs } from "pinia";
 import { useRoute } from "vue-router";
+import { useAxiosApiStore } from "@/stores/axiosApi";
+
+const apiStore = useAxiosApiStore();
+const { chatHistory } = storeToRefs(apiStore);
 
 const route = useRoute();
 const userStore = useUserStore();
@@ -20,24 +24,33 @@ const textMsg = ref(null);
 const contacts = ref([]);
 const friendId = ref(null);
 const chatId = ref(null);
-chatId.value = "chat-personal-8821"
 
 contacts.value = ContactData.contacts;
 
+const chatsMsgCount = computed(() => chatsMsg.value.length);
 const goToBottom = () => {
   setTimeout(() => {
     chatcontent.value.scrollTop = chatcontent.value.scrollHeight;
   }, 100);
 };
+watch(chatsMsgCount, goToBottom);
+// watch(chatsMsgCount, (value, oldValue) => {
+//   console.log("chatMsg changed", value, oldValue);
+//   goToBottom();
+// });
 
 const handlerSendText = () => {
-  console.log("send text:", textMsg.value);
-  console.log("user:", user)
+  console.log("chatLine:", chatHistory.value.chatLine);
+  chatId.value =
+    "chat-" +
+    chatHistory.value.chatLine.category +
+    "-" +
+    chatHistory.value.chatLine.chatId;
   const sender = {
     nickname: user.value.nickname,
     avatar: user.value.avatar,
     userId: user.value.userId,
-  }
+  };
   let recipients = [];
   recipients.push(friendId.value);
   const body = {
@@ -46,20 +59,26 @@ const handlerSendText = () => {
     recipients: recipients,
     category: "text",
     content: textMsg.value,
-    time: new Date()
-  }
-  stompClientStore.msgPublisher(body)
+    time: new Date(),
+  };
+  stompClientStore.msgPublisher(body);
   textMsg.value = "";
 };
 const changeContact = (val) => {
   console.log("got index:", val);
 };
 
-// watch(chats.value, goToBottom)
+const params = ref({});
 
 onMounted(() => {
   console.log("userId:", route.params.userId);
-  friendId.value = route.params.userId;
+  params.value = {
+    userId1: user.value.userId,
+    userId2: route.params.userId,
+    page: 0,
+    pageSize: 20,
+  };
+  apiStore.dispatch("getHistoryByUserId", params.value);
   //goToBottom()
 });
 </script>
@@ -71,11 +90,11 @@ onMounted(() => {
     </div>
     <div class="chatting">
       <div ref="chatcontent" class="chats">
-        <Chat :data="chatsMsg" :user = "user" />
+        <Chat :data="chatsMsg" :user="user" />
       </div>
       <div>
         <input
-        class="shadow appearance-none border border-blue-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+          class="shadow appearance-none border border-blue-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
           v-model="textMsg"
           type="text"
           @keyup.enter.native="handlerSendText"

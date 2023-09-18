@@ -25,6 +25,10 @@ export default {
       addr: "user/seekFriends",
     },
     {
+      name: "getHistoryByUserId",
+      addr: "chat/getHistoryByUserId",
+    },
+    {
       name: "fileUpload",
       addr: "file/upload",
     },

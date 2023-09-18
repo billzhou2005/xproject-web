@@ -3,20 +3,25 @@ import { ref, computed } from "vue";
 import { defineStore, acceptHMRUpdate } from "pinia";
 import { useUserStore } from "./user";
 import { storeToRefs } from "pinia";
-// import ApiAddrs from "./apiAddrs.json";
 import apiAddrs from "./apiAddrs";
 import { useRouter } from "vue-router";
+import { useStompClientStore } from "./stompClient";
 
 export const useAxiosApiStore = defineStore("axios-api", () => {
   const router = useRouter();
   const userStore = useUserStore();
   const { user, isLogin } = storeToRefs(userStore);
+  const stompClientStore = useStompClientStore();
+  const { chatsMsg } = storeToRefs(stompClientStore);
+
   const axiosClient = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL,
   });
   const response = ref({});
   const personalInfo = ref({});
   const friends = ref([]);
+  const chatHistory = ref({});
+
   const msg = ref("success");
 
   let addr = "none";
@@ -72,6 +77,16 @@ export const useAxiosApiStore = defineStore("axios-api", () => {
           case "personalInfo":
             personalInfo.value = data.data;
             break;
+          case "getHistoryByUserId":
+            chatHistory.value = {
+              chats: JSON.parse(data.data.chats),
+              chatLine: JSON.parse(data.data.chatLine),
+              total: data.data.total,
+            };
+            chatsMsg.value = JSON.parse(data.data.chats);
+            chatsMsg.value.sort(function (a, b) {
+              return b.time < a.time ? 1 : -1;
+            });
           default: //userUpdate
             response.value = data.data;
         }
@@ -85,6 +100,7 @@ export const useAxiosApiStore = defineStore("axios-api", () => {
     response,
     personalInfo,
     friends,
+    chatHistory,
     dispatch,
   };
 });
