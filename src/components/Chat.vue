@@ -1,25 +1,34 @@
 <script setup>
-import { ref } from 'vue'
+import { ref } from "vue";
 
 defineProps({
   data: Array,
   user: Object,
-})
+});
 const imgUrl = import.meta.env.VITE_IMG_URL;
-
 </script>
 
 <template>
-    <div class="chat" v-for = "chat in data">
-        <div class="content-right" v-if="chat.sender.userId === user.userId ">
-          <span> {{ chat.content }} </span>
-          <img class="avatar" :src="imgUrl+chat.sender.avatar" alt="avatar"/>
-        </div>
-        <div class="content-left" v-else>
-          <img class="avatar" :src="imgUrl+chat.sender.avatar" alt="avatar" />
-          <span> {{ chat.content }} </span>
-        </div>
+  <div class="chat" v-for="chat in data">
+    <div class="content-right" v-if="chat.sender.userId === user.userId">
+      <span> {{ chat.content }} </span>
+      <img
+        v-if="chat.sender.avatar !== ''"
+        class="avatar"
+        :src="imgUrl + chat.sender.avatar"
+        alt="avatar"
+      />
     </div>
+    <div class="content-left" v-else>
+      <img
+        v-if="chat.sender.avatar !== ''"
+        class="avatar"
+        :src="imgUrl + chat.sender.avatar"
+        alt="avatar"
+      />
+      <span> {{ chat.content }} </span>
+    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -44,5 +53,4 @@ const imgUrl = import.meta.env.VITE_IMG_URL;
   text-align: right;
   width: 360px;
 }
-
 </style>

@@ -64,8 +64,11 @@ export const useStompClientStore = defineStore("stomp-client", () => {
       }
     });
     if (!isFound) {
-      client.subscribe(exchange + body.chatId, responseCallback); //订阅消息
+      const subscription = client.subscribe(exchange + body.chatId, responseCallback); //订阅消息
       subscribedChatIds.value.push(body.chatId);
+      console.log("subscription:",subscription)
+      // // unsubscribe to stop receiving
+      // subscription.unsubscribe();
     }
 
     client.publish({

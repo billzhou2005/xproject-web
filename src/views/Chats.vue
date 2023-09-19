@@ -28,10 +28,10 @@ const chatId = ref(null);
 contacts.value = ContactData.contacts;
 
 const chatsMsgCount = computed(() => {
-  if (chatsMsg.value ===null) {
-    return 0
+  if (chatsMsg.value === null) {
+    return 0;
   } else {
-    return chatsMsg.value.length
+    return chatsMsg.value.length;
   }
 });
 const goToBottom = () => {
@@ -77,6 +77,7 @@ const changeContact = (val) => {
 const params = ref({});
 
 onMounted(() => {
+  chatsMsg.value = null;
   console.log("userId:", route.params.userId);
   params.value = {
     userId1: user.value.userId,
@@ -111,9 +112,7 @@ onMounted(() => {
       </div>
     </div>
   </div>
-  <div>
-    chantHistory: {{ chatHistory }}
-  </div>
+  <div>chantHistory: {{ chatHistory }}</div>
 </template>
 
 <style scoped>
