@@ -128,26 +128,28 @@ onMounted(() => {
 
 <style scoped>
 .container {
-  margin: 20px 20px;
+  margin-top: 30px;
   display: grid;
   grid-template-columns: 226px 380px;
   justify-content: center;
 }
 .contacts {
-  border: 1px solid #000;
+  border: 2px solid #000;
   border-radius: 5px 5px;
   height: 420px;
   width: 220px;
   overflow-x: hidden;
   overflow-y: auto;
+  box-shadow: 5px 3px 3px grey;
 }
 .chats {
-  border: 1px solid #000;
+  border: 2px solid #000;
   border-radius: 5px 5px;
   height: 420px;
   width: 380px;
   overflow-x: hidden;
   overflow-y: auto;
+  box-shadow: 5px 3px 3px grey;
 }
 input {
   margin: 0.4rem 0.4rem;
