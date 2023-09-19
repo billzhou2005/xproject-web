@@ -2,7 +2,6 @@
 import Chat from "../components/Chat.vue";
 import Contact from "../components/Contact.vue";
 import { computed, onMounted, onBeforeUnmount, ref, watch } from "vue";
-import ContactData from "@/stores/contacts.json";
 import { useUserStore } from "@/stores/user";
 import { useStompClientStore } from "@/stores/stompClient";
 import { storeToRefs } from "pinia";
@@ -10,22 +9,18 @@ import { useRoute } from "vue-router";
 import { useAxiosApiStore } from "@/stores/axiosApi";
 
 const apiStore = useAxiosApiStore();
-const { chatHistory } = storeToRefs(apiStore);
+const { chatLineList } = storeToRefs(apiStore);
 
 const route = useRoute();
 const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 
 const stompClientStore = useStompClientStore();
-const { chatsMsg } = storeToRefs(stompClientStore);
+const { chatsMsg, chatIdSelected } = storeToRefs(stompClientStore);
 
 const chatcontent = ref(null);
 const textMsg = ref(null);
-const contacts = ref([]);
 const friendId = ref(null);
-const chatId = ref(null);
-
-contacts.value = ContactData.contacts;
 
 const chatsMsgCount = computed(() => {
   if (chatsMsg.value === null) {
@@ -46,12 +41,11 @@ watch(chatsMsgCount, goToBottom);
 // });
 
 const handlerSendText = () => {
-  console.log("chatLine:", chatHistory.value.chatLine);
-  chatId.value =
-    "chat-" +
-    chatHistory.value.chatLine.category +
-    "-" +
-    chatHistory.value.chatLine.chatId;
+  console.log("chatIdSelected:", chatIdSelected.value);
+  if (chatIdSelected.value === null) {
+    alert("未选择联系人！");
+    return;
+  }
   const sender = {
     nickname: user.value.nickname,
     avatar: user.value.avatar,
@@ -60,7 +54,7 @@ const handlerSendText = () => {
   let recipients = [];
   recipients.push(friendId.value);
   const body = {
-    chatId: chatId.value,
+    chatId: chatIdSelected.value,
     sender: sender,
     recipients: recipients,
     category: "text",
@@ -72,20 +66,34 @@ const handlerSendText = () => {
 };
 const changeContact = (val) => {
   console.log("got index:", val);
+  chatIdSelected.value = chatLineList.value[val].chatId;
+  params.value = {
+    chatId: chatIdSelected.value,
+    page: 0,
+    pageSize: 20,
+  };
+  apiStore.dispatch("getHistoryByChatId", params.value);
 };
 
 const params = ref({});
 
 onMounted(() => {
   chatsMsg.value = null;
+  chatIdSelected.value = null;
   console.log("userId:", route.params.userId);
-  params.value = {
-    userId1: user.value.userId,
-    userId2: route.params.userId,
+  if (route.params.userId !== "none") {
+    params.value = {
+      userId1: user.value.userId,
+      userId2: route.params.userId,
+      page: 0,
+      pageSize: 20,
+    };
+    apiStore.dispatch("getHistoryByUserId", params.value);
+  }
+  apiStore.dispatch("chatLineList", {
     page: 0,
-    pageSize: 20,
-  };
-  apiStore.dispatch("getHistoryByUserId", params.value);
+    pageSize: 1000,
+  });
   //goToBottom()
 });
 </script>
@@ -93,7 +101,11 @@ onMounted(() => {
 <template>
   <div class="container">
     <div class="contacts">
-      <Contact :data="contacts" @clickContact="changeContact" />
+      <Contact
+        :data="chatLineList"
+        :chatIdSelected="chatIdSelected"
+        @clickContact="changeContact"
+      />
     </div>
     <div class="chatting">
       <div ref="chatcontent" class="chats">
@@ -112,7 +124,6 @@ onMounted(() => {
       </div>
     </div>
   </div>
-  <div>chantHistory: {{ chatHistory }}</div>
 </template>
 
 <style scoped>
@@ -120,6 +131,7 @@ onMounted(() => {
   margin: 20px 20px;
   display: grid;
   grid-template-columns: 226px 380px;
+  justify-content: center;
 }
 .contacts {
   border: 1px solid #000;

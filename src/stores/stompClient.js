@@ -4,7 +4,7 @@ import { defineStore, acceptHMRUpdate } from "pinia";
 
 export const useStompClientStore = defineStore("stomp-client", () => {
   const chatsMsg = ref([]);
-  const chatLineSelected = ref({});
+  const chatIdSelected = ref(null);
 
   const subscribedChatIds = ref([]);
 
@@ -37,8 +37,7 @@ export const useStompClientStore = defineStore("stomp-client", () => {
     //console.log("received messange:", message)
     const msg = JSON.parse(message.body);
     console.log("received message.body:", msg);
-    let nid = msg.chatId.replace(/chat-personal-/g,"")
-    if(chatLineSelected.value.chatId === nid) {
+    if (chatIdSelected.value === msg.chatId) {
       chatsMsg.value.push(msg);
     }
   };
@@ -55,8 +54,8 @@ export const useStompClientStore = defineStore("stomp-client", () => {
   const msgPublisher = (body) => {
     // var body = {"sender":sender,"category":category,"content":content,"receivers":receivers, time:new Date()};
     let isFound = false;
-    console.log("body.chatId",body.chatId)
-    console.log("subscribedChatIds.value",subscribedChatIds.value)
+    console.log("body.chatId", body.chatId);
+    console.log("subscribedChatIds.value", subscribedChatIds.value);
 
     subscribedChatIds.value.forEach((chatId) => {
       if (chatId === body.chatId) {
@@ -64,21 +63,25 @@ export const useStompClientStore = defineStore("stomp-client", () => {
       }
     });
     if (!isFound) {
-      const subscription = client.subscribe(exchange + body.chatId, responseCallback); //订阅消息
+      const subscription = client.subscribe(
+        exchange + "chat-" + chatIdSelected.value + "-" + body.chatId,
+        responseCallback
+      ); //订阅消息
       subscribedChatIds.value.push(body.chatId);
-      console.log("subscription:",subscription)
+      console.log("subscription:", subscription);
       // // unsubscribe to stop receiving
       // subscription.unsubscribe();
     }
 
     client.publish({
-      destination: exchange + body.chatId,
+      destination:
+        exchange + "chat-" + chatIdSelected.value + "-" + body.chatId,
       body: JSON.stringify(body),
     });
   };
   return {
     chatsMsg,
-    chatLineSelected,
+    chatIdSelected,
     client,
     subscribedChatIds,
     msgPublisher,

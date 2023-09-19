@@ -8,13 +8,13 @@
     </router-link>
     <div class="flex items-center gap-1">
       <router-link
-        :to="{ name: 'chats', params: { userId: 'test2023' } }"
+        :to="{ name: 'chats', params: { userId: 'none' } }"
         class="inline-flex items-center px-2 h-full transition-colors hover:bg-orange-500 hover:text-white"
       >
         U聊
       </router-link>
       <router-link
-        :to="{ name: 'game'}"
+        :to="{ name: 'game' }"
         class="inline-flex items-center px-2 h-full transition-colors hover:bg-orange-500 hover:text-white"
       >
         Game

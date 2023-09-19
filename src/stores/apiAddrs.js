@@ -25,8 +25,16 @@ export default {
       addr: "user/seekFriends",
     },
     {
+      name: "chatLineList",
+      addr: "chat/chatLineList",
+    },
+    {
       name: "getHistoryByUserId",
       addr: "chat/getHistoryByUserId",
+    },
+    {
+      name: "getHistoryByChatId",
+      addr: "chat/getHistoryByChatId",
     },
     {
       name: "fileUpload",

@@ -12,7 +12,7 @@ export const useAxiosApiStore = defineStore("axios-api", () => {
   const userStore = useUserStore();
   const { user, isLogin } = storeToRefs(userStore);
   const stompClientStore = useStompClientStore();
-  const { chatsMsg, chatLineSelected } = storeToRefs(stompClientStore);
+  const { chatsMsg, chatIdSelected } = storeToRefs(stompClientStore);
 
   const axiosClient = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -21,6 +21,7 @@ export const useAxiosApiStore = defineStore("axios-api", () => {
   const personalInfo = ref({});
   const friends = ref([]);
   const chatHistory = ref({});
+  const chatLineList = ref([]);
 
   const msg = ref("success");
 
@@ -78,21 +79,26 @@ export const useAxiosApiStore = defineStore("axios-api", () => {
             personalInfo.value = data.data;
             break;
           case "getHistoryByUserId":
+          case "getHistoryByChatId":
             chatHistory.value = {
               chats: JSON.parse(data.data.chats),
               chatLine: JSON.parse(data.data.chatLine),
               total: data.data.total,
             };
             chatsMsg.value = chatHistory.value.chats;
-            if(chatsMsg.value === null) {
+            if (chatsMsg.value === null) {
               chatsMsg.value = [];
             } else {
               chatsMsg.value.sort(function (a, b) {
                 return b.time < a.time ? 1 : -1;
               });
             }
-            chatLineSelected.value = chatHistory.value.chatLine
-            console.log("chatHistory.value", chatHistory.value)
+            chatIdSelected.value = chatHistory.value.chatLine.chatId;
+            console.log("chatHistory.value", chatHistory.value);
+            break;
+          case "chatLineList":
+            chatLineList.value = JSON.parse(data.data.chatLines);
+            break;
           default: //userUpdate
             response.value = data.data;
         }
@@ -107,6 +113,7 @@ export const useAxiosApiStore = defineStore("axios-api", () => {
     personalInfo,
     friends,
     chatHistory,
+    chatLineList,
     dispatch,
   };
 });

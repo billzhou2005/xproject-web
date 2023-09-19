@@ -113,7 +113,7 @@ onMounted(() => {
     >
       <img
         :src="imgUrl + img"
-        class="h-48 object-fill hover:scale-125 transition duration-500 cursor-pointer"
+        class="h-48 object-fill hover:scale-110 transition duration-500 cursor-pointer"
         @click="onImageClick(i + imageStart.count)"
       />
     </div>
