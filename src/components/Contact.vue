@@ -7,6 +7,8 @@ defineProps({
   chatIdSelected: String,
 });
 const imgUrl = import.meta.env.VITE_IMG_URL;
+const user = ref({});
+user.value = JSON.parse(localStorage.user);
 
 const emit = defineEmits(["clickContact"]);
 const clickContact = (index) => {
@@ -19,7 +21,7 @@ const clickContact = (index) => {
     <div class="content-left">
       <img
         class="avatar"
-        :src="imgUrl + contact.users[0].avatar"
+        :src="imgUrl + contact.avatar"
         alt="avatar"
         @click="clickContact(index)"
         style="cursor: pointer"
@@ -29,14 +31,19 @@ const clickContact = (index) => {
         style="color: blue; cursor: pointer"
         @click="clickContact(index)"
       >
-        {{ contact.users[0].nickname }}
+        {{ contact.name }}
       </span>
       <span
         v-else="chatIdSelected === contact.chatId"
         style="color: black; cursor: pointer"
         @click="clickContact(index)"
       >
-        {{ contact.users[0].nickname }}
+        {{ contact.name }}
+      </span>
+      <span style="padding-left: 5px; color: red" v-for="u in contact.users">
+        <slot v-if="u.userId === user.user.userId && u.unreadCount > 0">{{
+          u.unreadCount
+        }}</slot>
       </span>
     </div>
   </div>

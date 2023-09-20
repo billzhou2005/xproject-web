@@ -112,6 +112,7 @@ onMounted(() => {
       )"
     >
       <img
+        v-if="img !== ''"
         :src="imgUrl + img"
         class="h-48 object-fill hover:scale-110 transition duration-500 cursor-pointer"
         @click="onImageClick(i + imageStart.count)"

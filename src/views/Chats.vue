@@ -68,6 +68,7 @@ const changeContact = (val) => {
   console.log("got index:", val);
   chatIdSelected.value = chatLineList.value[val].chatId;
   params.value = {
+    userId: user.value.userId,
     chatId: chatIdSelected.value,
     page: 0,
     pageSize: 20,
@@ -89,11 +90,12 @@ onMounted(() => {
       pageSize: 20,
     };
     apiStore.dispatch("getHistoryByUserId", params.value);
+  } else {
+    apiStore.dispatch("chatLineList", {
+      page: 0,
+      pageSize: 1000,
+    });
   }
-  apiStore.dispatch("chatLineList", {
-    page: 0,
-    pageSize: 1000,
-  });
   //goToBottom()
 });
 </script>

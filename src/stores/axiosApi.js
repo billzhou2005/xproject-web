@@ -79,13 +79,7 @@ export const useAxiosApiStore = defineStore("axios-api", () => {
             personalInfo.value = data.data;
             break;
           case "getHistoryByUserId":
-          case "getHistoryByChatId":
-            chatHistory.value = {
-              chats: JSON.parse(data.data.chats),
-              chatLine: JSON.parse(data.data.chatLine),
-              total: data.data.total,
-            };
-            chatsMsg.value = chatHistory.value.chats;
+            chatsMsg.value = JSON.parse(data.data.chats);
             if (chatsMsg.value === null) {
               chatsMsg.value = [];
             } else {
@@ -93,8 +87,20 @@ export const useAxiosApiStore = defineStore("axios-api", () => {
                 return b.time < a.time ? 1 : -1;
               });
             }
-            chatIdSelected.value = chatHistory.value.chatLine.chatId;
-            console.log("chatHistory.value", chatHistory.value);
+            chatIdSelected.value = JSON.parse(data.data.chatLine).chatId;
+            chatLineList.value = JSON.parse(data.data.chatLines);
+            break;
+          case "getHistoryByChatId":
+            chatLineList.value = JSON.parse(data.data.chatLines);
+            chatsMsg.value = JSON.parse(data.data.chats);
+            if (chatsMsg.value === null) {
+              chatsMsg.value = [];
+            } else {
+              chatsMsg.value.sort(function (a, b) {
+                return b.time < a.time ? 1 : -1;
+              });
+            }
+            chatIdSelected.value = JSON.parse(data.data.chatLine).chatId;
             break;
           case "chatLineList":
             chatLineList.value = JSON.parse(data.data.chatLines);

@@ -120,26 +120,6 @@ onMounted(() => {
 <template>
   <div class="p-8 pb-0">
     <h1 class="text-4xl font-bold mb-4 text-orange-500">Test</h1>
-
-    <div class="flex flex-row items-center">
-      <input @change="readURL" type="file" id="custom-input" hidden />
-      <label
-        for="custom-input"
-        class="block text-slate-900 mr-4 py-2 px-4 rounded-md border-0 text-sm font-semibold bg-yellow-100 hover:bg-yellow-300 cursor-pointer"
-      >
-        选择文件
-      </label>
-      <label class="text-sm text-slate-500">{{ filename }}</label>
-      <img id="blah" :src="previewFile" alt="预览" />
-      <button
-        :disabled="uploading"
-        @click="handleFileUpload"
-        class="bg-blue-500 disabled:bg-gray-300 hover:bg-blue-700 text-white font-bold mx-2 py-2 px-4 rounded"
-      >
-        上传文件
-      </button>
-      <span v-if="uploading">上传中 {{ count }}</span>
-    </div>
   </div>
 </template>
 
