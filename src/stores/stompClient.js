@@ -1,7 +1,6 @@
 import { Client } from "@stomp/stompjs";
 import { ref, computed } from "vue";
 import { defineStore, acceptHMRUpdate } from "pinia";
-import { format, parseISO } from "date-fns";
 
 export const useStompClientStore = defineStore("stomp-client", () => {
   const chat = ref({
@@ -54,9 +53,7 @@ export const useStompClientStore = defineStore("stomp-client", () => {
     console.log("received message.body:", msg);
     if (chatIdSelected.value === msg.chatId) {
       chatsMsg.value.push(msg);
-      chatsMsg.value.forEach((chat) => {
-        console.log(format(parseISO(chat.time), "yyyy-MM-dd HH:mm:ss"));
-      });
+      chatsMsg.value.forEach((chat) => {});
     }
     const user = JSON.parse(localStorage.user);
     if (user.user.userId !== msg.sender.userId) {
