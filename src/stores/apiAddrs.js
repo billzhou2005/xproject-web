@@ -25,6 +25,10 @@ export default {
       addr: "user/seekFriends",
     },
     {
+      name: "updateUnreadCount",
+      addr: "chat/updateUnreadCount",
+    },
+    {
       name: "chatLineList",
       addr: "chat/chatLineList",
     },

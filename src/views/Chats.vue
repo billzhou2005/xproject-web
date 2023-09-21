@@ -16,7 +16,7 @@ const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 
 const stompClientStore = useStompClientStore();
-const { chatsMsg, chatIdSelected } = storeToRefs(stompClientStore);
+const { chat, chatsMsg, chatIdSelected } = storeToRefs(stompClientStore);
 
 const chatcontent = ref(null);
 const textMsg = ref(null);
@@ -46,22 +46,18 @@ const handlerSendText = () => {
     alert("未选择联系人！");
     return;
   }
-  const sender = {
+  chat.value.sender = {
     nickname: user.value.nickname,
     avatar: user.value.avatar,
     userId: user.value.userId,
   };
-  let recipients = [];
-  recipients.push(friendId.value);
-  const body = {
-    chatId: chatIdSelected.value,
-    sender: sender,
-    recipients: recipients,
-    category: "text",
-    content: textMsg.value,
-    time: new Date(),
-  };
-  stompClientStore.msgPublisher(body);
+  chat.value.recipients.push(friendId.value);
+  chat.value.chatId = chatIdSelected.value;
+  chat.value.category = "text";
+  chat.value.content = textMsg.value;
+  chat.value.time = new Date();
+
+  stompClientStore.msgPublisher(chat.value);
   textMsg.value = "";
 };
 const changeContact = (val) => {

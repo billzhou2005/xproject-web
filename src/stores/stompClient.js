@@ -1,11 +1,23 @@
 import { Client } from "@stomp/stompjs";
 import { ref, computed } from "vue";
 import { defineStore, acceptHMRUpdate } from "pinia";
+import { format, parseISO } from "date-fns";
 
 export const useStompClientStore = defineStore("stomp-client", () => {
+  const chat = ref({
+    chatId: "",
+    sender: {
+      nickname: "",
+      avatar: "",
+      userId: "",
+    },
+    recipients: [],
+    category: "text",
+    content: "",
+    time: new Date(),
+  });
   const chatsMsg = ref([]);
   const chatIdSelected = ref(null);
-
   const subscribedChatIds = ref([]);
 
   const client = new Client({
@@ -36,9 +48,26 @@ export const useStompClientStore = defineStore("stomp-client", () => {
   const responseCallback = (message) => {
     //console.log("received messange:", message)
     const msg = JSON.parse(message.body);
+    if (msg.category === "ack") {
+      return;
+    }
     console.log("received message.body:", msg);
     if (chatIdSelected.value === msg.chatId) {
       chatsMsg.value.push(msg);
+      chatsMsg.value.forEach((chat) => {
+        console.log(format(parseISO(chat.time), "yyyy-MM-dd HH:mm:ss"));
+      });
+    }
+    const user = JSON.parse(localStorage.user);
+    if (user.user.userId !== msg.sender.userId) {
+      chat.value.sender = {
+        nickname: user.user.nickname,
+        avatar: user.user.avatar,
+        userId: user.user.userId,
+      };
+      chat.value.chatId = msg.chatId;
+      chat.value.category = "ack";
+      msgPublisher(chat.value);
     }
   };
 
@@ -51,35 +80,35 @@ export const useStompClientStore = defineStore("stomp-client", () => {
     console.log("Additional details: " + frame.body);
   };
 
-  const msgPublisher = (body) => {
+  const msgPublisher = (chat) => {
     // var body = {"sender":sender,"category":category,"content":content,"receivers":receivers, time:new Date()};
     let isFound = false;
-    console.log("body.chatId", body.chatId);
+    console.log("chat.chatId", chat.chatId);
     console.log("subscribedChatIds.value", subscribedChatIds.value);
 
     subscribedChatIds.value.forEach((chatId) => {
-      if (chatId === body.chatId) {
+      if (chatId === chat.chatId) {
         isFound = true;
       }
     });
     if (!isFound) {
       const subscription = client.subscribe(
-        exchange + "chat-" + chatIdSelected.value + "-" + body.chatId,
+        exchange + "chat-" + chat.chatId,
         responseCallback
       ); //订阅消息
-      subscribedChatIds.value.push(body.chatId);
+      subscribedChatIds.value.push(chat.chatId);
       console.log("subscription:", subscription);
       // // unsubscribe to stop receiving
       // subscription.unsubscribe();
     }
 
     client.publish({
-      destination:
-        exchange + "chat-" + chatIdSelected.value + "-" + body.chatId,
-      body: JSON.stringify(body),
+      destination: exchange + "chat-" + chat.chatId,
+      body: JSON.stringify(chat),
     });
   };
   return {
+    chat,
     chatsMsg,
     chatIdSelected,
     client,
