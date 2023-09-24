@@ -7,11 +7,12 @@ import { onMounted, ref } from "vue";
 import { useAxiosApiStore } from "@/stores/axiosApi";
 import { storeToRefs } from "pinia";
 import { useUserStore } from "@/stores/user";
-import { useRoute } from 'vue-router';
+import { useRoute } from "vue-router";
 
 const route = useRoute();
 
 const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
 
 const isImageUpload = ref(false);
 const ImageUpload = (data) => {
@@ -31,11 +32,11 @@ const handleSubmit = () => {
 };
 const cancelSubmit = () => {
   isEdit.value = !isEdit.value;
-  apiStore.dispatch("personalInfo", null);
+  apiStore.dispatch("personalInfo", { userId: route.params.userId });
 };
 onMounted(() => {
-  console.log("userId:", route.params.userId)
-  apiStore.dispatch("personalInfo", null);
+  console.log("userId:", route.params.userId);
+  apiStore.dispatch("personalInfo", { userId: route.params.userId });
 });
 </script>
 
@@ -57,7 +58,10 @@ onMounted(() => {
     <PersonalEdit :personalInfo="personalInfo" />
   </div>
 
-  <div class="flex justify-center items-center px-8 py-8">
+  <div
+    v-if="route.params.userId === user.userId"
+    class="flex justify-center items-center px-8 py-8"
+  >
     <button
       v-if="!isEdit && !isImageUpload"
       @click="userStore.logout"

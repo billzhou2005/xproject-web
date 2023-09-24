@@ -49,7 +49,7 @@ const pets = computed(() => {
 
 <template>
   <div class="grid grid-cols-2 gap-2 mt-2 mx-10">
-    <h2>昵称：{{ personalInfo.nickname }}</h2>
+    <h3>昵称：{{ personalInfo.nickname }}</h3>
     <h3>性别：{{ personalInfo.gender }}</h3>
     <h3>生日：{{ personalInfo.birthday }}</h3>
     <h3>账号：{{ personalInfo.accountName }}</h3>

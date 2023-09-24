@@ -9,6 +9,7 @@ import { storeToRefs } from "pinia";
 import { useUserStore } from "@/stores/user";
 
 const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
 
 const isImageUpload = ref(false);
 const ImageUpload = (data) => {
@@ -28,10 +29,10 @@ const handleSubmit = () => {
 };
 const cancelSubmit = () => {
   isEdit.value = !isEdit.value;
-  apiStore.dispatch("personalInfo", null);
+  apiStore.dispatch("personalInfo", { userId: user.value.userId });
 };
 onMounted(() => {
-  apiStore.dispatch("personalInfo", null);
+  apiStore.dispatch("personalInfo", { userId: user.value.userId });
 });
 </script>
 
@@ -39,6 +40,8 @@ onMounted(() => {
   <div class="p-8 pb-0 text-orange-500">
     <h1 class="text-4xl font-bold mb-4">个人信息</h1>
   </div>
+  <div class="mx-auto">头像和财务</div>
+
   <div v-if="!isEdit" class="mx-auto">
     <PersonalGallery
       :personalInfo="personalInfo"
