@@ -28,8 +28,13 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="p-8 pb-0 text-orange-500">
-    <h1 class="text-4xl font-bold mb-4">Friends</h1>
+  <div
+    class="m-4 p-4 flex items-center justify-center bg-sky-200 text-black-500 text-3xl border-solid border-2 border-indigo-600"
+  >
+    2024元旦相约三亚活动火热招募中
+  </div>
+  <div class="p-4 pb-0 text-orange-500">
+    <h3 class="text-2xl font-bold mb-4">Friends</h3>
   </div>
   <Friends :friends="friends" />
 </template>

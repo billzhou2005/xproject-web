@@ -17,7 +17,7 @@
         :to="{ name: 'game' }"
         class="inline-flex items-center px-2 h-full transition-colors hover:bg-orange-500 hover:text-white"
       >
-        Game
+        会员服务
       </router-link>
       <router-link
         :to="{ name: 'personal' }"

@@ -21,7 +21,13 @@ onMounted(() => {
 
 <template>
   <div class="p-8 pb-0">
-    <h1 class="text-4xl font-bold mb-4 text-orange-500">Test</h1>
+    <h1 class="text-4xl font-bold mb-4 text-orange-500">成为会员</h1>
+    <div>
+      <p>专员精准服务</p>
+      <p>服务到相亲结婚成功</p>
+      <p>约会服务费折扣20%</p>
+    </div>
+    <div>VIP会员:12800元/5年, 1年内结婚退款30%</div>
   </div>
   <div class="mx-auto">
     头像和财务
